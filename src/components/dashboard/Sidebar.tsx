@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   LayoutDashboard,
   Users,
@@ -14,9 +14,11 @@ import {
   ChevronRight,
   LogOut,
   Building2,
-  Layers,
   Search,
   Command,
+  Bike,
+  Wrench,
+  Package,
 } from "lucide-react";
 
 interface MenuItem {
@@ -30,10 +32,12 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { icon: <LayoutDashboard size={18} />, label: "Dashboard", active: true },
-  { icon: <Users size={18} />, label: "Cadastros", hasSubmenu: true },
-  { icon: <FileText size={18} />, label: "Ordens de Serviço", hasSubmenu: true, badge: 5, badgeVariant: "warning" },
-  { icon: <BarChart3 size={18} />, label: "Relatórios", hasSubmenu: true },
+  { icon: <Wrench size={18} />, label: "Ordens de Serviço", hasSubmenu: true, badge: 8, badgeVariant: "warning" },
+  { icon: <Package size={18} />, label: "Peças e Estoque", hasSubmenu: true },
+  { icon: <Bike size={18} />, label: "Motos / Veículos", hasSubmenu: true },
+  { icon: <Users size={18} />, label: "Clientes", hasSubmenu: true },
   { icon: <DollarSign size={18} />, label: "Financeiro", hasSubmenu: true },
+  { icon: <BarChart3 size={18} />, label: "Relatórios", hasSubmenu: true },
   { icon: <Receipt size={18} />, label: "Fiscal", hasSubmenu: true },
 ];
 
@@ -43,20 +47,19 @@ const bottomMenuItems: MenuItem[] = [
 ];
 
 export function Sidebar() {
-  const [selectedCompany] = useState("Tech Solutions");
-  const [isCollapsed] = useState(false);
+  const [selectedCompany] = useState("MotoTech Oficina");
 
   return (
     <aside className="w-[280px] min-h-screen bg-sidebar flex flex-col border-r border-sidebar-border/50">
       {/* Logo & Brand */}
       <div className="h-16 px-5 flex items-center border-b border-sidebar-border/50">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-sidebar-primary to-info flex items-center justify-center">
-            <Layers className="text-white" size={18} />
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center">
+            <Bike className="text-white" size={18} />
           </div>
           <div className="flex flex-col">
-            <span className="text-sidebar-foreground font-bold text-base tracking-tight">DYNOIX</span>
-            <span className="text-sidebar-muted text-[10px] font-medium uppercase tracking-wider">Enterprise</span>
+            <span className="text-sidebar-foreground font-bold text-base tracking-tight">MOTOTECH</span>
+            <span className="text-sidebar-muted text-[10px] font-medium uppercase tracking-wider">Gestão de Oficina</span>
           </div>
         </div>
       </div>
@@ -65,7 +68,7 @@ export function Sidebar() {
       <div className="px-4 py-3">
         <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-sidebar-accent/50 border border-sidebar-border/50 text-sidebar-muted text-sm hover:bg-sidebar-accent transition-colors group">
           <Search size={15} />
-          <span className="flex-1 text-left">Buscar...</span>
+          <span className="flex-1 text-left">Buscar OS, peça, cliente...</span>
           <div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-sidebar-border/50 text-[10px] font-medium">
             <Command size={10} />
             <span>K</span>
@@ -76,12 +79,12 @@ export function Sidebar() {
       {/* Company Selector */}
       <div className="px-4 pb-3">
         <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-sidebar-accent/30 border border-sidebar-border/30 text-sidebar-foreground text-sm hover:bg-sidebar-accent/50 transition-colors">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sidebar-primary/20 to-info/20 flex items-center justify-center border border-sidebar-primary/30">
-            <Building2 size={14} className="text-sidebar-primary" />
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center border border-orange-500/30">
+            <Building2 size={14} className="text-orange-400" />
           </div>
           <div className="flex-1 text-left">
             <span className="block text-sm font-medium truncate">{selectedCompany}</span>
-            <span className="block text-[11px] text-sidebar-muted">3 unidades</span>
+            <span className="block text-[11px] text-sidebar-muted">2 unidades</span>
           </div>
           <ChevronDown size={14} className="text-sidebar-muted" />
         </button>
@@ -101,7 +104,7 @@ export function Sidebar() {
                 whileTap={{ scale: 0.98 }}
                 className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 group ${
                   item.active
-                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                    ? "bg-gradient-to-r from-orange-500 to-red-600 text-white"
                     : "text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
                 }`}
               >
@@ -116,7 +119,7 @@ export function Sidebar() {
                         ? "bg-warning text-warning-foreground" 
                         : item.badgeVariant === "success"
                         ? "bg-success text-success-foreground"
-                        : "bg-sidebar-primary text-sidebar-primary-foreground"
+                        : "bg-orange-500 text-white"
                     }`}>
                       {item.badge}
                     </span>
@@ -150,14 +153,14 @@ export function Sidebar() {
       <div className="px-4 py-3">
         <div className="p-4 rounded-xl bg-gradient-to-br from-sidebar-accent/80 to-sidebar-accent/40 border border-sidebar-border/50">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-sidebar-primary/20 flex items-center justify-center">
-              <HelpCircle size={16} className="text-sidebar-primary" />
+            <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center">
+              <HelpCircle size={16} className="text-orange-400" />
             </div>
-            <span className="text-sm font-semibold text-sidebar-foreground">Precisa de ajuda?</span>
+            <span className="text-sm font-semibold text-sidebar-foreground">Suporte Técnico</span>
           </div>
-          <p className="text-xs text-sidebar-muted mb-3">Acesse nossa central de suporte</p>
-          <button className="w-full py-2 bg-sidebar-primary/10 text-sidebar-primary text-xs font-semibold rounded-lg hover:bg-sidebar-primary/20 transition-colors border border-sidebar-primary/30">
-            Central de Ajuda
+          <p className="text-xs text-sidebar-muted mb-3">Dúvidas sobre o sistema?</p>
+          <button className="w-full py-2 bg-orange-500/10 text-orange-400 text-xs font-semibold rounded-lg hover:bg-orange-500/20 transition-colors border border-orange-500/30">
+            Falar com Suporte
           </button>
         </div>
       </div>
@@ -165,12 +168,12 @@ export function Sidebar() {
       {/* Footer */}
       <div className="px-4 py-4 border-t border-sidebar-border/50">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-sidebar-primary/30 to-info/30 flex items-center justify-center border border-sidebar-primary/20">
-            <span className="text-sm font-bold text-sidebar-foreground">JS</span>
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-500/30 to-red-500/30 flex items-center justify-center border border-orange-500/20">
+            <span className="text-sm font-bold text-sidebar-foreground">RC</span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-sidebar-foreground truncate">João Silva</p>
-            <p className="text-[11px] text-sidebar-muted">Administrador</p>
+            <p className="text-sm font-medium text-sidebar-foreground truncate">Ricardo Costa</p>
+            <p className="text-[11px] text-sidebar-muted">Gerente</p>
           </div>
           <button className="p-2 rounded-lg text-sidebar-muted hover:text-destructive hover:bg-destructive/10 transition-colors">
             <LogOut size={16} />

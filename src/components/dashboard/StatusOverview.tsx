@@ -4,15 +4,15 @@ import { Clock, CheckCircle2, AlertTriangle, Wrench, Package } from "lucide-reac
 const statuses = [
   { 
     label: "Aguardando", 
-    count: 12, 
+    count: 8, 
     icon: Clock, 
     color: "text-warning",
     bgColor: "bg-warning/5",
     borderColor: "border-warning/20"
   },
   { 
-    label: "Em Andamento", 
-    count: 8, 
+    label: "Em Reparo", 
+    count: 12, 
     icon: Wrench, 
     color: "text-info",
     bgColor: "bg-info/5",
@@ -20,7 +20,7 @@ const statuses = [
   },
   { 
     label: "Aguard. Peça", 
-    count: 5, 
+    count: 4, 
     icon: Package, 
     color: "text-primary",
     bgColor: "bg-primary/5",
@@ -36,7 +36,7 @@ const statuses = [
   },
   { 
     label: "Atrasadas", 
-    count: 3, 
+    count: 2, 
     icon: AlertTriangle, 
     color: "text-destructive",
     bgColor: "bg-destructive/5",
