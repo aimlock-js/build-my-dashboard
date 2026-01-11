@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Sparkles, ArrowRight, TrendingUp } from "lucide-react";
+import { ArrowRight, TrendingUp, Calendar, Target } from "lucide-react";
 
 export function WelcomeBanner() {
   const currentHour = new Date().getHours();
@@ -7,51 +7,60 @@ export function WelcomeBanner() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-primary/90 to-info p-6 mb-6"
+      transition={{ duration: 0.4 }}
+      className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary via-primary to-info p-6 mb-6"
     >
-      {/* Decorative elements */}
-      <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
-      <div className="absolute bottom-0 left-1/3 w-60 h-20 bg-white/5 rounded-full blur-xl" />
+      {/* Subtle pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 subtle-grid" />
+      </div>
       
       <div className="relative flex items-center justify-between">
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles size={16} className="text-warning" />
-            <span className="text-primary-foreground/80 text-sm font-medium">
-              {greeting}, João!
-            </span>
-          </div>
-          <h2 className="text-2xl font-bold text-primary-foreground mb-2">
-            Seu negócio está crescendo! 🚀
+          <p className="text-primary-foreground/70 text-sm font-medium mb-1">
+            {greeting}, João
+          </p>
+          <h2 className="text-xl font-bold text-primary-foreground mb-2">
+            Aqui está o resumo do seu negócio
           </h2>
-          <p className="text-primary-foreground/70 text-sm max-w-md">
-            Você tem <span className="font-semibold text-warning">5 novas ordens</span> aguardando 
-            e suas vendas aumentaram <span className="font-semibold text-success">12%</span> essa semana.
+          <p className="text-primary-foreground/70 text-sm max-w-lg">
+            Você tem <span className="font-semibold text-primary-foreground">5 novas ordens</span> aguardando processamento hoje.
           </p>
           
           <motion.button 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl text-primary-foreground text-sm font-medium transition-all"
+            className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg text-primary-foreground text-sm font-medium transition-all"
           >
-            Ver detalhes
-            <ArrowRight size={16} />
+            Ver ordens pendentes
+            <ArrowRight size={14} />
           </motion.button>
         </div>
 
-        <div className="hidden lg:flex items-center gap-4">
-          <div className="text-right">
-            <div className="flex items-center gap-2 justify-end mb-1">
-              <TrendingUp size={20} className="text-success" />
-              <span className="text-success font-bold text-lg">+12.5%</span>
+        {/* Stats */}
+        <div className="hidden lg:flex items-center gap-6">
+          <div className="text-center px-4 py-3 rounded-lg bg-white/10 backdrop-blur-sm">
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <TrendingUp size={14} className="text-success" />
+              <span className="text-success font-bold text-sm">+12.5%</span>
             </div>
-            <p className="text-primary-foreground/60 text-xs">vs semana passada</p>
+            <p className="text-primary-foreground/60 text-xs">Crescimento</p>
           </div>
-          <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-            <span className="text-4xl">📈</span>
+          <div className="text-center px-4 py-3 rounded-lg bg-white/10 backdrop-blur-sm">
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <Target size={14} className="text-warning" />
+              <span className="text-primary-foreground font-bold text-sm">87%</span>
+            </div>
+            <p className="text-primary-foreground/60 text-xs">Meta mensal</p>
+          </div>
+          <div className="text-center px-4 py-3 rounded-lg bg-white/10 backdrop-blur-sm">
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <Calendar size={14} className="text-primary-foreground" />
+              <span className="text-primary-foreground font-bold text-sm">22</span>
+            </div>
+            <p className="text-primary-foreground/60 text-xs">Dias restantes</p>
           </div>
         </div>
       </div>

@@ -1,15 +1,14 @@
 import {
-  BarChart,
-  Bar,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  AreaChart,
-  Area,
 } from "recharts";
-import { TrendingUp } from "lucide-react";
+import { motion } from "framer-motion";
+import { TrendingUp, MoreHorizontal } from "lucide-react";
 
 const data = [
   { day: "01", vendas: 12000, custos: 6000, lucro: 6000 },
@@ -37,79 +36,85 @@ const data = [
 ];
 
 const legendItems = [
-  { label: "Vendas", color: "hsl(152, 70%, 40%)" },
-  { label: "Custos", color: "hsl(217, 91%, 60%)" },
-  { label: "Lucro", color: "hsl(45, 100%, 55%)" },
+  { label: "Vendas", color: "hsl(160, 65%, 40%)" },
+  { label: "Custos", color: "hsl(210, 90%, 55%)" },
+  { label: "Lucro", color: "hsl(38, 92%, 50%)" },
 ];
 
 export function DailyEvolutionChart() {
   return (
-    <div className="bg-card rounded-2xl p-6 card-shadow border border-border/50">
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-card rounded-xl p-6 card-shadow border border-border h-full"
+    >
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-success to-success/70 flex items-center justify-center">
-            <TrendingUp size={20} className="text-success-foreground" />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-foreground">Evolução Diária</h3>
-            <p className="text-sm text-muted-foreground">
-              Comparativo de Vendas, Custos e Lucro
-            </p>
-          </div>
+        <div>
+          <h3 className="text-base font-semibold text-foreground">Evolução Diária</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Comparativo de receitas e despesas
+          </p>
         </div>
 
-        {/* Legend */}
-        <div className="flex items-center gap-6">
-          {legendItems.map((item) => (
-            <div key={item.label} className="flex items-center gap-2">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: item.color }}
-              />
-              <span className="text-xs font-medium text-muted-foreground">{item.label}</span>
-            </div>
-          ))}
+        <div className="flex items-center gap-4">
+          {/* Legend */}
+          <div className="hidden sm:flex items-center gap-4">
+            {legendItems.map((item) => (
+              <div key={item.label} className="flex items-center gap-2">
+                <div
+                  className="w-2.5 h-2.5 rounded-full"
+                  style={{ backgroundColor: item.color }}
+                />
+                <span className="text-xs font-medium text-muted-foreground">{item.label}</span>
+              </div>
+            ))}
+          </div>
+          <button className="p-1.5 rounded-lg hover:bg-muted transition-colors">
+            <MoreHorizontal size={16} className="text-muted-foreground" />
+          </button>
         </div>
       </div>
 
-      <div className="h-80">
+      <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>
               <linearGradient id="vendas" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(152, 70%, 40%)" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="hsl(152, 70%, 40%)" stopOpacity={0}/>
+                <stop offset="5%" stopColor="hsl(160, 65%, 40%)" stopOpacity={0.15}/>
+                <stop offset="95%" stopColor="hsl(160, 65%, 40%)" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="custos" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(217, 91%, 60%)" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="hsl(217, 91%, 60%)" stopOpacity={0}/>
+                <stop offset="5%" stopColor="hsl(210, 90%, 55%)" stopOpacity={0.15}/>
+                <stop offset="95%" stopColor="hsl(210, 90%, 55%)" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="lucro" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(45, 100%, 55%)" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="hsl(45, 100%, 55%)" stopOpacity={0}/>
+                <stop offset="5%" stopColor="hsl(38, 92%, 50%)" stopOpacity={0.15}/>
+                <stop offset="95%" stopColor="hsl(38, 92%, 50%)" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(230, 15%, 88%)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 15%, 92%)" vertical={false} />
             <XAxis
               dataKey="day"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "hsl(230, 10%, 45%)", fontSize: 12 }}
+              tick={{ fill: "hsl(220, 10%, 50%)", fontSize: 11 }}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "hsl(230, 10%, 45%)", fontSize: 12 }}
+              tick={{ fill: "hsl(220, 10%, 50%)", fontSize: 11 }}
               tickFormatter={(value) =>
                 value >= 1000 ? `${(value / 1000).toFixed(0)}k` : value
               }
+              width={45}
             />
             <Tooltip
               contentStyle={{
                 backgroundColor: "hsl(0, 0%, 100%)",
-                border: "1px solid hsl(230, 15%, 88%)",
-                borderRadius: "12px",
-                boxShadow: "0 4px 20px -4px rgb(0 0 0 / 0.15)",
+                border: "1px solid hsl(220, 15%, 90%)",
+                borderRadius: "8px",
+                boxShadow: "0 4px 12px -2px rgb(0 0 0 / 0.1)",
+                fontSize: "12px",
               }}
               formatter={(value: number) =>
                 new Intl.NumberFormat("pt-BR", {
@@ -121,7 +126,7 @@ export function DailyEvolutionChart() {
             <Area
               type="monotone"
               dataKey="vendas"
-              stroke="hsl(152, 70%, 40%)"
+              stroke="hsl(160, 65%, 40%)"
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#vendas)"
@@ -129,7 +134,7 @@ export function DailyEvolutionChart() {
             <Area
               type="monotone"
               dataKey="custos"
-              stroke="hsl(217, 91%, 60%)"
+              stroke="hsl(210, 90%, 55%)"
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#custos)"
@@ -137,7 +142,7 @@ export function DailyEvolutionChart() {
             <Area
               type="monotone"
               dataKey="lucro"
-              stroke="hsl(45, 100%, 55%)"
+              stroke="hsl(38, 92%, 50%)"
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#lucro)"
@@ -145,6 +150,6 @@ export function DailyEvolutionChart() {
           </AreaChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </motion.div>
   );
 }

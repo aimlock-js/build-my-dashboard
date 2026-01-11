@@ -16,10 +16,10 @@ const Index = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         <Header />
         
-        <main className="flex-1 p-8 overflow-auto">
+        <main className="flex-1 p-6 overflow-auto">
           {/* Welcome Banner */}
           <WelcomeBanner />
 
@@ -29,134 +29,136 @@ const Index = () => {
           {/* Status Overview */}
           <StatusOverview />
 
-          {/* Page Title */}
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-foreground tracking-tight">Métricas do Período</h1>
-            <p className="text-muted-foreground text-sm mt-0.5">Comparativo com período anterior</p>
+          {/* Section Title */}
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">Métricas do Período</h2>
+              <p className="text-xs text-muted-foreground">Comparativo com período anterior</p>
+            </div>
+            <button className="text-xs text-primary font-medium hover:underline">
+              Ver relatório completo
+            </button>
           </div>
 
           {/* Top Metrics Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
             <MetricCard
-              title="VENDAS TOTAIS"
+              title="Vendas Totais"
               value="R$ 80.317,20"
               change={{ value: "-41,9%", isPositive: false }}
               previousValue="R$ 138.209,15"
               accentColor="blue"
-              icon={<DollarSign size={20} />}
+              icon={<DollarSign size={18} />}
               index={0}
             />
             <MetricCard
-              title="LUCRO LÍQUIDO"
+              title="Lucro Líquido"
               value="R$ 34.330,28"
               change={{ value: "-51,1%", isPositive: false }}
               previousValue="R$ 70.178,66"
               accentColor="green"
-              icon={<TrendingUp size={20} />}
+              icon={<TrendingUp size={18} />}
               index={1}
             />
             <MetricCard
-              title="ORDENS CONCLUÍDAS"
+              title="Ordens Concluídas"
               value="129"
-              change={{ value: "-71 ordens", isPositive: false }}
+              change={{ value: "-71", isPositive: false }}
               previousValue="200"
               accentColor="yellow"
-              icon={<Package size={20} />}
+              icon={<Package size={18} />}
               index={2}
             />
             <MetricCard
-              title="MARGEM DE LUCRO"
+              title="Margem de Lucro"
               value="42,7%"
               change={{ value: "+8%", isPositive: true }}
               previousValue="50,8%"
               accentColor="purple"
-              icon={<TrendingUp size={20} />}
+              icon={<TrendingUp size={18} />}
               index={3}
             />
           </div>
 
           {/* Second Metrics Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
             <MetricCard
-              title="CUSTOS"
+              title="Custos"
               value="R$ 45.986,92"
               change={{ value: "-32,4%", isPositive: true }}
               previousValue="R$ 68.011,49"
               accentColor="blue"
-              icon={<ShoppingCart size={20} />}
+              icon={<ShoppingCart size={18} />}
               index={4}
             />
             <MetricCard
-              title="TICKET MÉDIO"
+              title="Ticket Médio"
               value="R$ 622,61"
               change={{ value: "-9,9%", isPositive: false }}
               previousValue="R$ 691,04"
               accentColor="green"
-              icon={<DollarSign size={20} />}
+              icon={<DollarSign size={18} />}
               index={5}
             />
             <MetricCard
-              title="TEMPO MÉDIO OS"
+              title="Tempo Médio OS"
               value="1,0 dias"
               change={{ value: "-44,4%", isPositive: true }}
               previousValue="1,8 dias"
               accentColor="yellow"
-              icon={<Clock size={20} />}
+              icon={<Clock size={18} />}
               index={6}
             />
             <MetricCard
-              title="NOVOS CLIENTES"
+              title="Novos Clientes"
               value="87"
               change={{ value: "-39%", isPositive: false }}
               previousValue="146"
               accentColor="purple"
-              icon={<Users size={20} />}
+              icon={<Users size={18} />}
               index={7}
             />
           </div>
 
           {/* Chart and Summary Section */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mb-6">
             <div className="xl:col-span-2">
               <DailyEvolutionChart />
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-3">
               <SummaryCard
                 label="Vendas"
                 value="R$ 80.317,20"
                 change={{ value: "-41,9%", isPositive: false }}
-                icon={<DollarSign size={24} className="text-success" />}
-                iconBg="bg-success/15"
+                icon={<DollarSign size={22} className="text-success" />}
+                iconBg="bg-success/10"
+                index={0}
               />
               <SummaryCard
                 label="Custo"
                 value="R$ 45.986,92"
                 change={{ value: "-32,4%", isPositive: true }}
-                icon={<ShoppingCart size={24} className="text-info" />}
-                iconBg="bg-info/15"
+                icon={<ShoppingCart size={22} className="text-info" />}
+                iconBg="bg-info/10"
+                index={1}
               />
               <SummaryCard
                 label="Retorno"
                 value="R$ 34.330,28"
                 change={{ value: "-51,1%", isPositive: false }}
-                icon={<TrendingUp size={24} className="text-warning" />}
-                iconBg="bg-warning/15"
+                icon={<TrendingUp size={22} className="text-warning" />}
+                iconBg="bg-warning/10"
+                index={2}
               />
             </div>
           </div>
 
           {/* Bottom Section - 3 Columns */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            <div className="xl:col-span-1">
-              <TopProducts />
-            </div>
-            <div className="xl:col-span-1">
-              <RecentActivity />
-            </div>
-            <div className="xl:col-span-1">
-              <NotificationPanel />
-            </div>
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+            <TopProducts />
+            <RecentActivity />
+            <NotificationPanel />
           </div>
         </main>
       </div>

@@ -7,40 +7,40 @@ const statuses = [
     count: 12, 
     icon: Clock, 
     color: "text-warning",
-    bgColor: "bg-warning/10",
-    borderColor: "border-warning/30"
+    bgColor: "bg-warning/5",
+    borderColor: "border-warning/20"
   },
   { 
     label: "Em Andamento", 
     count: 8, 
     icon: Wrench, 
     color: "text-info",
-    bgColor: "bg-info/10",
-    borderColor: "border-info/30"
+    bgColor: "bg-info/5",
+    borderColor: "border-info/20"
   },
   { 
     label: "Aguard. Peça", 
     count: 5, 
     icon: Package, 
     color: "text-primary",
-    bgColor: "bg-primary/10",
-    borderColor: "border-primary/30"
+    bgColor: "bg-primary/5",
+    borderColor: "border-primary/20"
   },
   { 
     label: "Prontas", 
     count: 15, 
     icon: CheckCircle2, 
     color: "text-success",
-    bgColor: "bg-success/10",
-    borderColor: "border-success/30"
+    bgColor: "bg-success/5",
+    borderColor: "border-success/20"
   },
   { 
     label: "Atrasadas", 
     count: 3, 
     icon: AlertTriangle, 
     color: "text-destructive",
-    bgColor: "bg-destructive/10",
-    borderColor: "border-destructive/30"
+    bgColor: "bg-destructive/5",
+    borderColor: "border-destructive/20"
   },
 ];
 
@@ -49,50 +49,40 @@ export function StatusOverview() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
-      className="bg-card rounded-2xl p-5 card-shadow border border-border/50 mb-6"
+      transition={{ delay: 0.1 }}
+      className="bg-card rounded-xl p-5 card-shadow border border-border mb-6"
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">
-          Status das Ordens
-        </h3>
-        <span className="text-sm text-muted-foreground">
-          Total: <span className="font-semibold text-foreground">{total}</span>
-        </span>
+        <div>
+          <h3 className="text-sm font-semibold text-foreground">
+            Status das Ordens
+          </h3>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {total} ordens em acompanhamento
+          </p>
+        </div>
+        <button className="text-xs text-primary font-medium hover:underline">
+          Ver todas
+        </button>
       </div>
 
-      <div className="flex gap-2">
+      <div className="grid grid-cols-5 gap-3">
         {statuses.map((status, index) => (
           <motion.div
             key={status.label}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.1 * index }}
-            whileHover={{ scale: 1.02 }}
-            className={`flex-1 p-3 rounded-xl ${status.bgColor} border ${status.borderColor} cursor-pointer hover:shadow-md transition-all`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 * index }}
+            className={`p-3 rounded-lg ${status.bgColor} border ${status.borderColor} cursor-pointer hover:shadow-sm transition-all`}
           >
             <div className="flex items-center justify-between mb-2">
-              <status.icon size={18} className={status.color} />
-              <span className={`text-2xl font-bold ${status.color}`}>{status.count}</span>
+              <status.icon size={16} className={status.color} />
+              <span className={`text-xl font-bold ${status.color}`}>{status.count}</span>
             </div>
             <p className="text-xs font-medium text-muted-foreground truncate">{status.label}</p>
           </motion.div>
-        ))}
-      </div>
-
-      {/* Progress bar */}
-      <div className="mt-4 h-2 bg-muted rounded-full overflow-hidden flex">
-        {statuses.map((status, index) => (
-          <motion.div
-            key={status.label}
-            initial={{ width: 0 }}
-            animate={{ width: `${(status.count / total) * 100}%` }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className={`h-full ${status.bgColor.replace('/10', '')}`}
-            style={{ backgroundColor: `hsl(var(--${status.color.replace('text-', '')}))` }}
-          />
         ))}
       </div>
     </motion.div>

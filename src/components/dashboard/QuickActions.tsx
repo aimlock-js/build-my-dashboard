@@ -1,53 +1,38 @@
 import { motion } from "framer-motion";
-import { Plus, FileText, Users, Package, Calculator, Zap } from "lucide-react";
+import { Plus, FileText, Users, Package, Calculator, Download } from "lucide-react";
 
 const actions = [
-  { icon: Plus, label: "Nova OS", color: "from-primary to-primary/80", description: "Criar ordem" },
-  { icon: Users, label: "Cliente", color: "from-info to-info/80", description: "Novo cadastro" },
-  { icon: Package, label: "Produto", color: "from-success to-success/80", description: "Adicionar" },
-  { icon: FileText, label: "Orçamento", color: "from-warning to-warning/80", description: "Gerar novo" },
-  { icon: Calculator, label: "Financeiro", color: "from-destructive to-destructive/80", description: "Lançamento" },
-  { icon: Zap, label: "Atalhos", color: "from-primary to-info", description: "Mais ações" },
+  { icon: Plus, label: "Nova OS", shortcut: "N" },
+  { icon: Users, label: "Novo Cliente", shortcut: "C" },
+  { icon: Package, label: "Produto", shortcut: "P" },
+  { icon: FileText, label: "Orçamento", shortcut: "O" },
+  { icon: Calculator, label: "Financeiro", shortcut: "F" },
+  { icon: Download, label: "Exportar", shortcut: "E" },
 ];
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.05 }
-  }
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
-};
 
 export function QuickActions() {
   return (
-    <motion.div
-      variants={container}
-      initial="hidden"
-      animate="show"
-      className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6"
-    >
+    <div className="flex flex-wrap items-center gap-2 mb-6">
+      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mr-2">
+        Ações Rápidas
+      </span>
       {actions.map((action, index) => (
         <motion.button
           key={action.label}
-          variants={item}
-          whileHover={{ scale: 1.05, y: -2 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: index * 0.03 }}
+          whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="group flex flex-col items-center gap-2 p-4 bg-card rounded-2xl border border-border/50 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+          className="inline-flex items-center gap-2 px-3 py-2 bg-card rounded-lg border border-border hover:border-primary/30 hover:bg-primary/5 transition-all duration-150 group"
         >
-          <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${action.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
-            <action.icon size={22} className="text-white" />
-          </div>
-          <div className="text-center">
-            <span className="block text-sm font-semibold text-foreground">{action.label}</span>
-            <span className="block text-xs text-muted-foreground">{action.description}</span>
-          </div>
+          <action.icon size={14} className="text-muted-foreground group-hover:text-primary transition-colors" />
+          <span className="text-sm font-medium text-foreground">{action.label}</span>
+          <span className="hidden md:inline-flex items-center justify-center w-5 h-5 rounded bg-muted text-[10px] font-bold text-muted-foreground">
+            {action.shortcut}
+          </span>
         </motion.button>
       ))}
-    </motion.div>
+    </div>
   );
 }
