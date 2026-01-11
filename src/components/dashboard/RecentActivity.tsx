@@ -1,4 +1,5 @@
-import { FileText, User, CheckCircle, Clock, AlertCircle, Package } from "lucide-react";
+import { motion } from "framer-motion";
+import { FileText, User, CheckCircle, Clock, AlertCircle, MoreHorizontal } from "lucide-react";
 
 interface ActivityItem {
   id: string;
@@ -14,146 +15,127 @@ const activities: ActivityItem[] = [
     id: "1",
     type: "completed",
     title: "OS #2847 Finalizada",
-    description: "Reparo de iPhone 14 Pro Max - Tela",
-    time: "Há 5 minutos",
+    description: "Reparo de iPhone 14 Pro Max",
+    time: "5 min",
     value: "R$ 890,00",
   },
   {
     id: "2",
     type: "customer",
     title: "Novo cliente cadastrado",
-    description: "Maria Santos - (11) 99876-5432",
-    time: "Há 15 minutos",
+    description: "Maria Santos",
+    time: "15 min",
   },
   {
     id: "3",
     type: "order",
-    title: "Nova OS #2848 criada",
-    description: "Manutenção Notebook Dell - Formatação",
-    time: "Há 32 minutos",
+    title: "Nova OS #2848",
+    description: "Manutenção Notebook Dell",
+    time: "32 min",
     value: "R$ 150,00",
   },
   {
     id: "4",
     type: "pending",
-    title: "OS #2845 aguardando peça",
+    title: "OS #2845 aguardando",
     description: "Display Samsung Galaxy S23",
-    time: "Há 1 hora",
+    time: "1h",
   },
   {
     id: "5",
-    type: "completed",
-    title: "OS #2844 Finalizada",
-    description: "Troca de bateria MacBook Pro",
-    time: "Há 2 horas",
-    value: "R$ 650,00",
-  },
-  {
-    id: "6",
     type: "alert",
     title: "Estoque baixo",
-    description: "Tela iPhone 13 - Apenas 2 unidades",
-    time: "Há 3 horas",
+    description: "Tela iPhone 13 - 2 unid.",
+    time: "3h",
   },
 ];
 
 const typeConfig = {
   order: {
     icon: FileText,
-    iconBg: "bg-info/15",
+    iconBg: "bg-info/10",
     iconColor: "text-info",
-    dotColor: "bg-info",
   },
   customer: {
     icon: User,
-    iconBg: "bg-primary/15",
+    iconBg: "bg-primary/10",
     iconColor: "text-primary",
-    dotColor: "bg-primary",
   },
   completed: {
     icon: CheckCircle,
-    iconBg: "bg-success/15",
+    iconBg: "bg-success/10",
     iconColor: "text-success",
-    dotColor: "bg-success",
   },
   pending: {
     icon: Clock,
-    iconBg: "bg-warning/15",
+    iconBg: "bg-warning/10",
     iconColor: "text-warning",
-    dotColor: "bg-warning",
   },
   alert: {
     icon: AlertCircle,
-    iconBg: "bg-destructive/15",
+    iconBg: "bg-destructive/10",
     iconColor: "text-destructive",
-    dotColor: "bg-destructive",
   },
 };
 
 export function RecentActivity() {
   return (
-    <div className="bg-card rounded-2xl p-6 card-shadow border border-border/50">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
-            <Package size={20} className="text-primary-foreground" />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-foreground">Atividade Recente</h3>
-            <p className="text-sm text-muted-foreground">Últimas atualizações do sistema</p>
-          </div>
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-card rounded-xl p-5 card-shadow border border-border h-full"
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-base font-semibold text-foreground">Atividade Recente</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">Últimas atualizações</p>
         </div>
-        <button className="text-sm text-primary font-medium hover:underline transition-all">
-          Ver tudo
+        <button className="p-1.5 rounded-lg hover:bg-muted transition-colors">
+          <MoreHorizontal size={16} className="text-muted-foreground" />
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-1">
         {activities.map((activity, index) => {
           const config = typeConfig[activity.type];
           const Icon = config.icon;
 
           return (
-            <div
+            <motion.div
               key={activity.id}
-              className="group relative flex items-start gap-4 p-3 rounded-xl hover:bg-muted/50 transition-all duration-200 cursor-pointer"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer group"
             >
-              {/* Timeline connector */}
-              {index < activities.length - 1 && (
-                <div className="absolute left-[26px] top-14 w-0.5 h-8 bg-border" />
-              )}
-
-              {/* Icon */}
-              <div className={`w-10 h-10 rounded-xl ${config.iconBg} flex items-center justify-center shrink-0`}>
-                <Icon size={18} className={config.iconColor} />
+              <div className={`w-9 h-9 rounded-lg ${config.iconBg} flex items-center justify-center shrink-0`}>
+                <Icon size={16} className={config.iconColor} />
               </div>
 
-              {/* Content */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                      {activity.title}
-                    </p>
-                    <p className="text-sm text-muted-foreground truncate">
-                      {activity.description}
-                    </p>
-                  </div>
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
+                    {activity.title}
+                  </p>
                   {activity.value && (
-                    <span className="text-sm font-semibold text-success shrink-0">
+                    <span className="text-xs font-semibold text-success shrink-0">
                       {activity.value}
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <div className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`} />
-                  <span className="text-xs text-muted-foreground">{activity.time}</span>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <p className="text-xs text-muted-foreground truncate">{activity.description}</p>
+                  <span className="text-xs text-muted-foreground/60">• {activity.time}</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
-    </div>
+
+      <button className="w-full mt-3 py-2 text-xs font-medium text-primary hover:bg-primary/5 rounded-lg transition-colors">
+        Ver todas as atividades
+      </button>
+    </motion.div>
   );
 }

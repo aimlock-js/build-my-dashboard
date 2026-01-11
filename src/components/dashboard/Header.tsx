@@ -1,54 +1,74 @@
-import { Bell, Calendar, ChevronDown, Search, User } from "lucide-react";
+import { motion } from "framer-motion";
+import { Bell, Calendar, ChevronDown, Search, Settings, Maximize2 } from "lucide-react";
 
 export function Header() {
   return (
-    <header className="h-20 bg-card/80 glass-effect border-b border-border/50 px-6 flex items-center justify-between sticky top-0 z-10">
-      {/* Left side - Breadcrumb & Search */}
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2 text-sm">
-          <span className="text-muted-foreground">Dashboard</span>
-          <span className="text-muted-foreground/50">/</span>
-          <span className="text-foreground font-medium">Resumo</span>
-        </div>
+    <header className="h-16 bg-card border-b border-border px-6 flex items-center justify-between sticky top-0 z-20">
+      {/* Left side - Breadcrumb */}
+      <div className="flex items-center gap-4">
+        <nav className="flex items-center gap-2 text-sm">
+          <span className="text-muted-foreground font-medium">Dashboard</span>
+          <span className="text-muted-foreground/40">/</span>
+          <span className="text-foreground font-semibold">Visão Geral</span>
+        </nav>
+      </div>
 
-        {/* Search */}
-        <div className="relative hidden md:block">
-          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/60" />
+      {/* Center - Search */}
+      <div className="hidden lg:flex flex-1 max-w-md mx-8">
+        <div className="relative w-full">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Buscar..."
-            className="pl-10 pr-4 py-2.5 w-72 bg-muted/50 border border-border/50 rounded-xl text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
+            placeholder="Buscar ordens, clientes, produtos..."
+            className="w-full pl-9 pr-4 py-2 bg-muted/50 border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
           />
         </div>
       </div>
 
       {/* Right side */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         {/* Period Selector */}
-        <button className="flex items-center gap-2 px-4 py-2.5 bg-primary/10 text-primary rounded-xl text-sm font-medium hover:bg-primary/15 transition-colors border border-primary/20">
-          <Calendar size={16} />
+        <motion.button 
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
+          className="flex items-center gap-2 px-3 py-2 bg-muted/50 text-foreground rounded-lg text-sm font-medium hover:bg-muted transition-colors border border-border"
+        >
+          <Calendar size={14} className="text-muted-foreground" />
           <span>Últimos 30 dias</span>
-          <ChevronDown size={14} />
+          <ChevronDown size={12} className="text-muted-foreground" />
+        </motion.button>
+
+        <div className="w-px h-6 bg-border mx-1" />
+
+        {/* Quick Actions */}
+        <button className="w-9 h-9 rounded-lg bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors border border-border">
+          <Maximize2 size={16} className="text-muted-foreground" />
+        </button>
+
+        <button className="w-9 h-9 rounded-lg bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors border border-border">
+          <Settings size={16} className="text-muted-foreground" />
         </button>
 
         {/* Notifications */}
-        <button className="relative w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors border border-border/50">
-          <Bell size={18} className="text-muted-foreground" />
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive rounded-full flex items-center justify-center text-[10px] font-bold text-destructive-foreground shadow-lg">
+        <button className="relative w-9 h-9 rounded-lg bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors border border-border">
+          <Bell size={16} className="text-muted-foreground" />
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-destructive rounded-full flex items-center justify-center text-[9px] font-bold text-destructive-foreground ring-2 ring-card">
             3
           </span>
         </button>
 
+        <div className="w-px h-6 bg-border mx-1" />
+
         {/* User Profile */}
-        <button className="flex items-center gap-3 pl-3 pr-4 py-2 rounded-xl hover:bg-muted/50 transition-colors">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
-            <User size={18} className="text-primary-foreground" />
+        <button className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-lg hover:bg-muted/50 transition-colors">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-info flex items-center justify-center text-xs font-bold text-primary-foreground">
+            JS
           </div>
-          <div className="hidden lg:block text-left">
-            <p className="text-sm font-semibold text-foreground">João Silva</p>
-            <p className="text-xs text-muted-foreground">Administrador</p>
+          <div className="hidden xl:block text-left">
+            <p className="text-sm font-semibold text-foreground leading-tight">João Silva</p>
+            <p className="text-[11px] text-muted-foreground leading-tight">Admin</p>
           </div>
-          <ChevronDown size={14} className="text-muted-foreground hidden lg:block" />
+          <ChevronDown size={12} className="text-muted-foreground hidden xl:block" />
         </button>
       </div>
     </header>
