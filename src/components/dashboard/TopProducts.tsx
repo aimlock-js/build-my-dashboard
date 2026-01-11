@@ -2,11 +2,11 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, ArrowDownRight, MoreHorizontal } from "lucide-react";
 
 const products = [
-  { name: "Troca de Tela iPhone", quantity: 45, revenue: 40500, growth: 12 },
-  { name: "Formatação Notebook", quantity: 38, revenue: 5700, growth: 8 },
-  { name: "Troca de Bateria", quantity: 32, revenue: 12800, growth: -5 },
-  { name: "Reparo Placa-mãe", quantity: 18, revenue: 27000, growth: 23 },
-  { name: "Troca Display Samsung", quantity: 15, revenue: 13500, growth: 15 },
+  { name: "Troca de Óleo + Filtro", quantity: 58, revenue: 8700, growth: 15 },
+  { name: "Kit Relação Completo", quantity: 42, revenue: 16800, growth: 22 },
+  { name: "Revisão Completa", quantity: 35, revenue: 15750, growth: 8 },
+  { name: "Troca de Pneus", quantity: 28, revenue: 14000, growth: 12 },
+  { name: "Retífica de Motor", quantity: 12, revenue: 36000, growth: -5 },
 ];
 
 export function TopProducts() {
@@ -20,8 +20,8 @@ export function TopProducts() {
     >
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-base font-semibold text-foreground">Top Serviços</h3>
-          <p className="text-xs text-muted-foreground mt-0.5">Mais realizados este mês</p>
+          <h3 className="text-base font-semibold text-foreground">Serviços Mais Realizados</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">Ranking do mês</p>
         </div>
         <button className="p-1.5 rounded-lg hover:bg-muted transition-colors">
           <MoreHorizontal size={16} className="text-muted-foreground" />

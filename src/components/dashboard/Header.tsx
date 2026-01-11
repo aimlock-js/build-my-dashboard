@@ -19,8 +19,8 @@ export function Header() {
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Buscar ordens, clientes, produtos..."
-            className="w-full pl-9 pr-4 py-2 bg-muted/50 border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
+            placeholder="Buscar OS, motos, peças, clientes..."
+            className="w-full pl-9 pr-4 py-2 bg-muted/50 border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500/50 transition-all"
           />
         </div>
       </div>
@@ -52,7 +52,7 @@ export function Header() {
         {/* Notifications */}
         <button className="relative w-9 h-9 rounded-lg bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors border border-border">
           <Bell size={16} className="text-muted-foreground" />
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-destructive rounded-full flex items-center justify-center text-[9px] font-bold text-destructive-foreground ring-2 ring-card">
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full flex items-center justify-center text-[9px] font-bold text-white ring-2 ring-card">
             3
           </span>
         </button>
@@ -61,12 +61,12 @@ export function Header() {
 
         {/* User Profile */}
         <button className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-lg hover:bg-muted/50 transition-colors">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-info flex items-center justify-center text-xs font-bold text-primary-foreground">
-            JS
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-xs font-bold text-white">
+            RC
           </div>
           <div className="hidden xl:block text-left">
-            <p className="text-sm font-semibold text-foreground leading-tight">João Silva</p>
-            <p className="text-[11px] text-muted-foreground leading-tight">Admin</p>
+            <p className="text-sm font-semibold text-foreground leading-tight">Ricardo Costa</p>
+            <p className="text-[11px] text-muted-foreground leading-tight">Gerente</p>
           </div>
           <ChevronDown size={12} className="text-muted-foreground hidden xl:block" />
         </button>
