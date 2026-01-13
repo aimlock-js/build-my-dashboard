@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -24,30 +25,30 @@ import {
 interface MenuItem {
   icon: React.ReactNode;
   label: string;
-  active?: boolean;
-  hasSubmenu?: boolean;
+  path: string;
   badge?: string | number;
   badgeVariant?: "default" | "success" | "warning" | "destructive";
 }
 
 const menuItems: MenuItem[] = [
-  { icon: <LayoutDashboard size={18} />, label: "Dashboard", active: true },
-  { icon: <Wrench size={18} />, label: "Ordens de Serviço", hasSubmenu: true, badge: 8, badgeVariant: "warning" },
-  { icon: <Package size={18} />, label: "Peças e Estoque", hasSubmenu: true },
-  { icon: <Bike size={18} />, label: "Motos / Veículos", hasSubmenu: true },
-  { icon: <Users size={18} />, label: "Clientes", hasSubmenu: true },
-  { icon: <DollarSign size={18} />, label: "Financeiro", hasSubmenu: true },
-  { icon: <BarChart3 size={18} />, label: "Relatórios", hasSubmenu: true },
-  { icon: <Receipt size={18} />, label: "Fiscal", hasSubmenu: true },
+  { icon: <LayoutDashboard size={18} />, label: "Dashboard", path: "/" },
+  { icon: <Wrench size={18} />, label: "Ordens de Serviço", path: "/ordens-servico", badge: 8, badgeVariant: "warning" },
+  { icon: <Package size={18} />, label: "Peças e Estoque", path: "/pecas-estoque" },
+  { icon: <Bike size={18} />, label: "Motos / Veículos", path: "/motos" },
+  { icon: <Users size={18} />, label: "Clientes", path: "/clientes" },
+  { icon: <DollarSign size={18} />, label: "Financeiro", path: "/financeiro" },
+  { icon: <BarChart3 size={18} />, label: "Relatórios", path: "/relatorios" },
+  { icon: <Receipt size={18} />, label: "Fiscal", path: "/fiscal" },
 ];
 
 const bottomMenuItems: MenuItem[] = [
-  { icon: <Settings size={18} />, label: "Configurações" },
-  { icon: <Shield size={18} />, label: "Administrador" },
+  { icon: <Settings size={18} />, label: "Configurações", path: "/configuracoes" },
+  { icon: <Shield size={18} />, label: "Administrador", path: "/administrador" },
 ];
 
 export function Sidebar() {
   const [selectedCompany] = useState("MotoTech Oficina");
+  const location = useLocation();
 
   return (
     <aside className="w-[280px] min-h-screen bg-sidebar flex flex-col border-r border-sidebar-border/50">
@@ -98,37 +99,41 @@ export function Sidebar() {
           </span>
         </div>
         <ul className="space-y-0.5">
-          {menuItems.map((item, index) => (
-            <li key={index}>
-              <motion.button
-                whileTap={{ scale: 0.98 }}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 group ${
-                  item.active
-                    ? "bg-gradient-to-r from-orange-500 to-red-600 text-white"
-                    : "text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span className={item.active ? "" : "opacity-70 group-hover:opacity-100"}>{item.icon}</span>
-                  <span>{item.label}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  {item.badge && (
-                    <span className={`px-1.5 py-0.5 text-[10px] font-bold rounded ${
-                      item.badgeVariant === "warning" 
-                        ? "bg-warning text-warning-foreground" 
-                        : item.badgeVariant === "success"
-                        ? "bg-success text-success-foreground"
-                        : "bg-orange-500 text-white"
-                    }`}>
-                      {item.badge}
-                    </span>
-                  )}
-                  {item.hasSubmenu && <ChevronRight size={14} className="opacity-50" />}
-                </div>
-              </motion.button>
-            </li>
-          ))}
+          {menuItems.map((item, index) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <li key={index}>
+                <Link to={item.path}>
+                  <motion.div
+                    whileTap={{ scale: 0.98 }}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 group ${
+                      isActive
+                        ? "bg-gradient-to-r from-orange-500 to-red-600 text-white"
+                        : "text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className={isActive ? "" : "opacity-70 group-hover:opacity-100"}>{item.icon}</span>
+                      <span>{item.label}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {item.badge && (
+                        <span className={`px-1.5 py-0.5 text-[10px] font-bold rounded ${
+                          item.badgeVariant === "warning" 
+                            ? "bg-warning text-warning-foreground" 
+                            : item.badgeVariant === "success"
+                            ? "bg-success text-success-foreground"
+                            : "bg-orange-500 text-white"
+                        }`}>
+                          {item.badge}
+                        </span>
+                      )}
+                    </div>
+                  </motion.div>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         {/* Bottom Menu */}
@@ -138,14 +143,23 @@ export function Sidebar() {
           </span>
         </div>
         <ul className="space-y-0.5">
-          {bottomMenuItems.map((item, index) => (
-            <li key={index}>
-              <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground transition-colors">
-                <span className="opacity-60">{item.icon}</span>
-                <span>{item.label}</span>
-              </button>
-            </li>
-          ))}
+          {bottomMenuItems.map((item, index) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <li key={index}>
+                <Link to={item.path}>
+                  <div className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                    isActive 
+                      ? "bg-gradient-to-r from-orange-500 to-red-600 text-white"
+                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+                  }`}>
+                    <span className={isActive ? "" : "opacity-60"}>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
