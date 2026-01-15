@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,8 +18,9 @@ import {
   Bike
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { NovoClienteModal, Cliente } from "@/components/modals/NovoClienteModal";
 
-const clientes = [
+const initialClientes: Cliente[] = [
   { 
     id: 1, 
     nome: "João Silva", 
@@ -95,6 +97,27 @@ const fidelidadeConfig = {
 };
 
 const Clientes = () => {
+  const [clientes, setClientes] = useState<Cliente[]>(initialClientes);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSaveCliente = (novoCliente: Cliente) => {
+    setClientes([novoCliente, ...clientes]);
+  };
+
+  const filteredClientes = clientes.filter(cliente => 
+    cliente.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    cliente.telefone.includes(searchTerm) ||
+    cliente.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const stats = [
+    { label: "Total de Clientes", value: clientes.length.toString(), color: "text-foreground" },
+    { label: "Clientes Ativos", value: "186", color: "text-emerald-600" },
+    { label: "Novos este Mês", value: "23", color: "text-blue-600" },
+    { label: "Clientes VIP", value: clientes.filter(c => c.fidelidade === "platinum" || c.fidelidade === "gold").length.toString(), color: "text-purple-600" },
+  ];
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -109,7 +132,10 @@ const Clientes = () => {
               <h1 className="text-2xl font-bold text-foreground">Clientes</h1>
               <p className="text-sm text-muted-foreground">Gestão de clientes da oficina</p>
             </div>
-            <Button className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2">
+            <Button 
+              onClick={() => setModalOpen(true)}
+              className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2"
+            >
               <Plus size={16} />
               Novo Cliente
             </Button>
@@ -117,12 +143,7 @@ const Clientes = () => {
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            {[
-              { label: "Total de Clientes", value: "248", color: "text-foreground" },
-              { label: "Clientes Ativos", value: "186", color: "text-emerald-600" },
-              { label: "Novos este Mês", value: "23", color: "text-blue-600" },
-              { label: "Clientes VIP", value: "42", color: "text-purple-600" },
-            ].map((stat, i) => (
+            {stats.map((stat, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -149,6 +170,8 @@ const Clientes = () => {
                     <Input 
                       placeholder="Buscar por nome, telefone, email..." 
                       className="pl-10 bg-background"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
                 </div>
@@ -166,7 +189,7 @@ const Clientes = () => {
 
           {/* Clients Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {clientes.map((cliente, index) => (
+            {filteredClientes.map((cliente, index) => (
               <motion.div
                 key={cliente.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -184,9 +207,9 @@ const Clientes = () => {
                         </div>
                         <div>
                           <p className="font-semibold text-foreground">{cliente.nome}</p>
-                          <Badge variant="outline" className={`text-[10px] ${fidelidadeConfig[cliente.fidelidade as keyof typeof fidelidadeConfig].color}`}>
+                          <Badge variant="outline" className={`text-[10px] ${fidelidadeConfig[cliente.fidelidade as keyof typeof fidelidadeConfig]?.color || fidelidadeConfig.bronze.color}`}>
                             <Star size={10} className="mr-1" />
-                            {fidelidadeConfig[cliente.fidelidade as keyof typeof fidelidadeConfig].label}
+                            {fidelidadeConfig[cliente.fidelidade as keyof typeof fidelidadeConfig]?.label || "Bronze"}
                           </Badge>
                         </div>
                       </div>
@@ -213,7 +236,7 @@ const Clientes = () => {
                     <div className="mt-4 pt-3 border-t border-border/50 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Bike size={14} className="text-orange-500" />
-                        <span className="text-sm font-medium">{cliente.motos} moto{cliente.motos > 1 ? 's' : ''}</span>
+                        <span className="text-sm font-medium">{cliente.motos} moto{cliente.motos !== 1 ? 's' : ''}</span>
                       </div>
                       <div className="text-right">
                         <p className="text-xs text-muted-foreground">Total gasto</p>
@@ -229,6 +252,12 @@ const Clientes = () => {
           </div>
         </main>
       </div>
+
+      <NovoClienteModal 
+        open={modalOpen} 
+        onOpenChange={setModalOpen} 
+        onSave={handleSaveCliente} 
+      />
     </div>
   );
 };
