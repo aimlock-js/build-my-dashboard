@@ -13,6 +13,7 @@ import Relatorios from "./pages/Relatorios";
 import Fiscal from "./pages/Fiscal";
 import Configuracoes from "./pages/Configuracoes";
 import Administrador from "./pages/Administrador";
+import Perfil from "./pages/Perfil";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/fiscal" element={<Fiscal />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
           <Route path="/administrador" element={<Administrador />} />
+          <Route path="/perfil" element={<Perfil />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
