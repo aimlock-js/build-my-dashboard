@@ -1,7 +1,18 @@
 import { motion } from "framer-motion";
-import { Bell, Calendar, ChevronDown, Search, Settings, Maximize2 } from "lucide-react";
+import { Bell, Calendar, ChevronDown, Search, Settings, Maximize2, User, LogOut, LayoutDashboard } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Header() {
+  const navigate = useNavigate();
+
   return (
     <header className="h-16 bg-card border-b border-border px-6 flex items-center justify-between sticky top-0 z-20">
       {/* Left side - Breadcrumb */}
@@ -45,9 +56,11 @@ export function Header() {
           <Maximize2 size={16} className="text-muted-foreground" />
         </button>
 
-        <button className="w-9 h-9 rounded-lg bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors border border-border">
-          <Settings size={16} className="text-muted-foreground" />
-        </button>
+        <Link to="/configuracoes">
+          <button className="w-9 h-9 rounded-lg bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors border border-border">
+            <Settings size={16} className="text-muted-foreground" />
+          </button>
+        </Link>
 
         {/* Notifications */}
         <button className="relative w-9 h-9 rounded-lg bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors border border-border">
@@ -59,17 +72,52 @@ export function Header() {
 
         <div className="w-px h-6 bg-border mx-1" />
 
-        {/* User Profile */}
-        <button className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-lg hover:bg-muted/50 transition-colors">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-xs font-bold text-white">
-            RC
-          </div>
-          <div className="hidden xl:block text-left">
-            <p className="text-sm font-semibold text-foreground leading-tight">Ricardo Costa</p>
-            <p className="text-[11px] text-muted-foreground leading-tight">Gerente</p>
-          </div>
-          <ChevronDown size={12} className="text-muted-foreground hidden xl:block" />
-        </button>
+        {/* User Profile Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-lg hover:bg-muted/50 transition-colors">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-xs font-bold text-white">
+                RC
+              </div>
+              <div className="hidden xl:block text-left">
+                <p className="text-sm font-semibold text-foreground leading-tight">Ricardo Costa</p>
+                <p className="text-[11px] text-muted-foreground leading-tight">Gerente</p>
+              </div>
+              <ChevronDown size={12} className="text-muted-foreground hidden xl:block" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-sm font-bold text-white">
+                  RC
+                </div>
+                <div>
+                  <p className="font-semibold">Ricardo Costa</p>
+                  <p className="text-xs text-muted-foreground font-normal">ricardo.costa@mototech.com</p>
+                </div>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate("/")}>
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              Dashboard
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/perfil")}>
+              <User className="mr-2 h-4 w-4" />
+              Meu Perfil
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/configuracoes")}>
+              <Settings className="mr-2 h-4 w-4" />
+              Configurações
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="text-red-600 focus:text-red-600">
+              <LogOut className="mr-2 h-4 w-4" />
+              Sair
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
