@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,8 +19,9 @@ import {
   Bike
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { NovaOSModal, OrdemServico } from "@/components/modals/NovaOSModal";
 
-const ordensServico = [
+const initialOrdensServico: OrdemServico[] = [
   { 
     id: "OS-2024-001", 
     cliente: "João Silva", 
@@ -90,6 +92,28 @@ const statusConfig = {
 };
 
 const OrdensServico = () => {
+  const [ordensServico, setOrdensServico] = useState<OrdemServico[]>(initialOrdensServico);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSaveOS = (novaOS: OrdemServico) => {
+    setOrdensServico([novaOS, ...ordensServico]);
+  };
+
+  const filteredOrdens = ordensServico.filter(os => 
+    os.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    os.cliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    os.placa.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    os.moto.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const stats = [
+    { label: "Total Abertas", value: ordensServico.filter(os => os.status !== "concluida").length.toString(), color: "text-foreground" },
+    { label: "Em Andamento", value: ordensServico.filter(os => os.status === "em_andamento").length.toString(), color: "text-blue-600" },
+    { label: "Aguard. Peças", value: ordensServico.filter(os => os.status === "aguardando_peca").length.toString(), color: "text-amber-600" },
+    { label: "Concluídas", value: ordensServico.filter(os => os.status === "concluida").length.toString(), color: "text-emerald-600" },
+  ];
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -104,7 +128,10 @@ const OrdensServico = () => {
               <h1 className="text-2xl font-bold text-foreground">Ordens de Serviço</h1>
               <p className="text-sm text-muted-foreground">Gerencie todas as ordens de serviço da oficina</p>
             </div>
-            <Button className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2">
+            <Button 
+              onClick={() => setModalOpen(true)}
+              className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2"
+            >
               <Plus size={16} />
               Nova OS
             </Button>
@@ -112,12 +139,7 @@ const OrdensServico = () => {
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            {[
-              { label: "Total Abertas", value: "24", color: "text-foreground" },
-              { label: "Em Andamento", value: "12", color: "text-blue-600" },
-              { label: "Aguard. Peças", value: "5", color: "text-amber-600" },
-              { label: "Concluídas Hoje", value: "7", color: "text-emerald-600" },
-            ].map((stat, i) => (
+            {stats.map((stat, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -144,6 +166,8 @@ const OrdensServico = () => {
                     <Input 
                       placeholder="Buscar por OS, cliente, placa..." 
                       className="pl-10 bg-background"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
                 </div>
@@ -162,7 +186,7 @@ const OrdensServico = () => {
           {/* Orders Table */}
           <Card className="border-border/50">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base font-semibold">Lista de Ordens</CardTitle>
+              <CardTitle className="text-base font-semibold">Lista de Ordens ({filteredOrdens.length})</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
@@ -180,8 +204,9 @@ const OrdensServico = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {ordensServico.map((os, index) => {
-                      const StatusIcon = statusConfig[os.status as keyof typeof statusConfig].icon;
+                    {filteredOrdens.map((os, index) => {
+                      const StatusIcon = statusConfig[os.status as keyof typeof statusConfig]?.icon || Clock;
+                      const statusStyle = statusConfig[os.status as keyof typeof statusConfig] || statusConfig.aguardando;
                       return (
                         <motion.tr 
                           key={os.id}
@@ -208,9 +233,9 @@ const OrdensServico = () => {
                             <span className="text-sm text-foreground">{os.servico}</span>
                           </td>
                           <td className="p-4">
-                            <Badge variant="outline" className={`gap-1 ${statusConfig[os.status as keyof typeof statusConfig].color}`}>
+                            <Badge variant="outline" className={`gap-1 ${statusStyle.color}`}>
                               <StatusIcon size={12} />
-                              {statusConfig[os.status as keyof typeof statusConfig].label}
+                              {statusStyle.label}
                             </Badge>
                           </td>
                           <td className="p-4">
@@ -242,6 +267,12 @@ const OrdensServico = () => {
           </Card>
         </main>
       </div>
+
+      <NovaOSModal 
+        open={modalOpen} 
+        onOpenChange={setModalOpen} 
+        onSave={handleSaveOS} 
+      />
     </div>
   );
 };

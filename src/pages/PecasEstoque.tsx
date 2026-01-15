@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,8 +18,9 @@ import {
   ArrowUpDown
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { NovaPecaModal, Peca } from "@/components/modals/NovaPecaModal";
 
-const pecas = [
+const initialPecas: Peca[] = [
   { 
     id: "PEC-001", 
     nome: "Óleo Motor 10W40 1L", 
@@ -88,12 +90,36 @@ const pecas = [
 ];
 
 const PecasEstoque = () => {
+  const [pecas, setPecas] = useState<Peca[]>(initialPecas);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSavePeca = (novaPeca: Peca) => {
+    setPecas([novaPeca, ...pecas]);
+  };
+
+  const filteredPecas = pecas.filter(peca => 
+    peca.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    peca.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    peca.categoria.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const estoqueStatus = (estoque: number, min: number, max: number) => {
     const percent = (estoque / max) * 100;
     if (estoque <= min) return { color: "bg-red-500", text: "Crítico", variant: "destructive" as const };
     if (percent < 40) return { color: "bg-amber-500", text: "Baixo", variant: "warning" as const };
     return { color: "bg-emerald-500", text: "Normal", variant: "success" as const };
   };
+
+  const totalValorEstoque = pecas.reduce((acc, peca) => acc + (peca.custo * peca.estoque), 0);
+  const estoqueCritico = pecas.filter(p => p.estoque <= p.estoqueMin).length;
+
+  const stats = [
+    { label: "Total de Itens", value: pecas.length.toString(), icon: Package, color: "text-foreground" },
+    { label: "Valor em Estoque", value: `R$ ${totalValorEstoque.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}`, icon: TrendingUp, color: "text-emerald-600" },
+    { label: "Estoque Crítico", value: estoqueCritico.toString(), icon: AlertTriangle, color: "text-red-600" },
+    { label: "Pedidos Pendentes", value: "3", icon: TrendingDown, color: "text-amber-600" },
+  ];
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -118,7 +144,10 @@ const PecasEstoque = () => {
                 <TrendingUp size={16} />
                 Saída
               </Button>
-              <Button className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2">
+              <Button 
+                onClick={() => setModalOpen(true)}
+                className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2"
+              >
                 <Plus size={16} />
                 Nova Peça
               </Button>
@@ -127,12 +156,7 @@ const PecasEstoque = () => {
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            {[
-              { label: "Total de Itens", value: "324", icon: Package, color: "text-foreground" },
-              { label: "Valor em Estoque", value: "R$ 45.280", icon: TrendingUp, color: "text-emerald-600" },
-              { label: "Estoque Crítico", value: "8", icon: AlertTriangle, color: "text-red-600" },
-              { label: "Pedidos Pendentes", value: "3", icon: TrendingDown, color: "text-amber-600" },
-            ].map((stat, i) => (
+            {stats.map((stat, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -166,6 +190,8 @@ const PecasEstoque = () => {
                     <Input 
                       placeholder="Buscar peça por nome, código..." 
                       className="pl-10 bg-background"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
                 </div>
@@ -183,7 +209,7 @@ const PecasEstoque = () => {
 
           {/* Products Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {pecas.map((peca, index) => {
+            {filteredPecas.map((peca, index) => {
               const status = estoqueStatus(peca.estoque, peca.estoqueMin, peca.estoqueMax);
               const percentEstoque = (peca.estoque / peca.estoqueMax) * 100;
               
@@ -252,6 +278,12 @@ const PecasEstoque = () => {
           </div>
         </main>
       </div>
+
+      <NovaPecaModal 
+        open={modalOpen} 
+        onOpenChange={setModalOpen} 
+        onSave={handleSavePeca} 
+      />
     </div>
   );
 };

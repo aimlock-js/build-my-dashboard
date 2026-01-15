@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,8 +17,9 @@ import {
   FileText
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { NovaMotoModal, Moto } from "@/components/modals/NovaMotoModal";
 
-const motos = [
+const initialMotos: Moto[] = [
   { 
     id: 1, 
     modelo: "Honda CG 160 Titan", 
@@ -93,6 +95,27 @@ const motos = [
 ];
 
 const Motos = () => {
+  const [motos, setMotos] = useState<Moto[]>(initialMotos);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSaveMoto = (novaMoto: Moto) => {
+    setMotos([novaMoto, ...motos]);
+  };
+
+  const filteredMotos = motos.filter(moto => 
+    moto.modelo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    moto.placa.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    moto.cliente.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const stats = [
+    { label: "Total Cadastradas", value: motos.length.toString(), icon: Bike },
+    { label: "Atendidas este Mês", value: "47", icon: Wrench },
+    { label: "Novos Cadastros", value: "12", icon: Plus },
+    { label: "Com OS Aberta", value: "8", icon: FileText },
+  ];
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -107,7 +130,10 @@ const Motos = () => {
               <h1 className="text-2xl font-bold text-foreground">Motos / Veículos</h1>
               <p className="text-sm text-muted-foreground">Cadastro de motos e veículos dos clientes</p>
             </div>
-            <Button className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2">
+            <Button 
+              onClick={() => setModalOpen(true)}
+              className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2"
+            >
               <Plus size={16} />
               Nova Moto
             </Button>
@@ -115,12 +141,7 @@ const Motos = () => {
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            {[
-              { label: "Total Cadastradas", value: "156", icon: Bike },
-              { label: "Atendidas este Mês", value: "47", icon: Wrench },
-              { label: "Novos Cadastros", value: "12", icon: Plus },
-              { label: "Com OS Aberta", value: "8", icon: FileText },
-            ].map((stat, i) => (
+            {stats.map((stat, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -154,6 +175,8 @@ const Motos = () => {
                     <Input 
                       placeholder="Buscar por placa, modelo, cliente..." 
                       className="pl-10 bg-background"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
                 </div>
@@ -171,7 +194,7 @@ const Motos = () => {
 
           {/* Motos Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {motos.map((moto, index) => (
+            {filteredMotos.map((moto, index) => (
               <motion.div
                 key={moto.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -234,6 +257,12 @@ const Motos = () => {
           </div>
         </main>
       </div>
+
+      <NovaMotoModal 
+        open={modalOpen} 
+        onOpenChange={setModalOpen} 
+        onSave={handleSaveMoto} 
+      />
     </div>
   );
 };
