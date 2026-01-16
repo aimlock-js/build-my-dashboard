@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,68 +6,69 @@
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 220 25% 12%;
+    /* ChatGPT-inspired dark neutral theme */
+    --background: 220 13% 10%;
+    --foreground: 220 9% 94%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 25% 12%;
+    --card: 220 13% 13%;
+    --card-foreground: 220 9% 94%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 12%;
+    --popover: 220 13% 15%;
+    --popover-foreground: 220 9% 94%;
 
-    --primary: 230 80% 55%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 220 9% 94%;
+    --primary-foreground: 220 13% 10%;
 
-    --secondary: 220 15% 94%;
-    --secondary-foreground: 220 25% 12%;
+    --secondary: 220 13% 18%;
+    --secondary-foreground: 220 9% 80%;
 
-    --muted: 220 15% 94%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 220 13% 18%;
+    --muted-foreground: 220 9% 55%;
 
-    --accent: 230 60% 96%;
-    --accent-foreground: 230 80% 55%;
+    --accent: 220 13% 20%;
+    --accent-foreground: 220 9% 94%;
 
-    --destructive: 0 72% 55%;
+    --destructive: 0 62% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 160 65% 40%;
+    --success: 142 55% 45%;
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
+    --warning-foreground: 0 0% 10%;
 
-    --info: 210 90% 55%;
+    --info: 210 80% 55%;
     --info-foreground: 0 0% 100%;
 
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 230 80% 55%;
+    --border: 220 13% 20%;
+    --input: 220 13% 20%;
+    --ring: 220 9% 70%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Enterprise Sidebar - Deep slate with subtle blue undertone */
-    --sidebar-background: 225 35% 12%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 230 80% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 225 30% 18%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 225 25% 22%;
-    --sidebar-ring: 230 80% 60%;
-    --sidebar-muted: 220 15% 60%;
+    /* Sidebar - Slightly lighter than background */
+    --sidebar-background: 220 13% 12%;
+    --sidebar-foreground: 220 9% 90%;
+    --sidebar-primary: 220 9% 94%;
+    --sidebar-primary-foreground: 220 13% 10%;
+    --sidebar-accent: 220 13% 18%;
+    --sidebar-accent-foreground: 220 9% 94%;
+    --sidebar-border: 220 13% 18%;
+    --sidebar-ring: 220 9% 70%;
+    --sidebar-muted: 220 9% 50%;
 
-    /* Chart colors - Refined corporate palette */
-    --chart-1: 160 65% 40%;
-    --chart-2: 210 90% 55%;
+    /* Chart colors - Neutral with accent */
+    --chart-1: 142 55% 45%;
+    --chart-2: 210 80% 55%;
     --chart-3: 38 92% 50%;
-    --chart-4: 230 80% 55%;
-    --chart-5: 0 72% 55%;
+    --chart-4: 262 60% 55%;
+    --chart-5: 0 62% 55%;
 
     /* Metric accent colors */
-    --metric-blue: 210 90% 55%;
-    --metric-green: 160 65% 40%;
+    --metric-blue: 210 80% 55%;
+    --metric-green: 142 55% 45%;
     --metric-yellow: 38 92% 50%;
-    --metric-purple: 230 80% 55%;
+    --metric-purple: 262 60% 55%;
   }
 }
 
@@ -78,69 +79,84 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Custom scrollbar for dark theme */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
   }
 }
 
 @layer utilities {
   .dashboard-shadow {
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.2);
   }
   
   .card-shadow {
     box-shadow: 
-      0 0 0 1px rgb(0 0 0 / 0.03),
-      0 1px 2px -1px rgb(0 0 0 / 0.04),
-      0 4px 8px -2px rgb(0 0 0 / 0.03);
+      0 0 0 1px hsl(var(--border) / 0.5),
+      0 1px 2px -1px rgb(0 0 0 / 0.15),
+      0 4px 8px -2px rgb(0 0 0 / 0.1);
   }
   
   .card-shadow-hover {
     box-shadow: 
-      0 0 0 1px rgb(0 0 0 / 0.04),
-      0 2px 4px -1px rgb(0 0 0 / 0.05),
-      0 8px 16px -4px rgb(0 0 0 / 0.08);
+      0 0 0 1px hsl(var(--border) / 0.6),
+      0 2px 4px -1px rgb(0 0 0 / 0.2),
+      0 8px 16px -4px rgb(0 0 0 / 0.15);
   }
 
   .card-shadow-lg {
     box-shadow: 
-      0 0 0 1px rgb(0 0 0 / 0.04),
-      0 4px 8px -2px rgb(0 0 0 / 0.06),
-      0 16px 32px -8px rgb(0 0 0 / 0.12);
+      0 0 0 1px hsl(var(--border) / 0.6),
+      0 4px 8px -2px rgb(0 0 0 / 0.2),
+      0 16px 32px -8px rgb(0 0 0 / 0.25);
   }
 
   .metric-card-shadow {
     box-shadow: 
-      0 0 0 1px rgb(0 0 0 / 0.03),
-      0 2px 4px -1px rgb(0 0 0 / 0.04),
-      0 6px 12px -3px rgb(0 0 0 / 0.05);
+      0 0 0 1px hsl(var(--border) / 0.5),
+      0 2px 4px -1px rgb(0 0 0 / 0.15),
+      0 6px 12px -3px rgb(0 0 0 / 0.1);
   }
 
   .glass-effect {
     backdrop-filter: blur(16px);
-    background: rgba(255, 255, 255, 0.92);
+    background: hsl(var(--card) / 0.9);
   }
 
   .glass-dark {
     backdrop-filter: blur(16px);
-    background: rgba(15, 20, 35, 0.95);
+    background: hsl(var(--background) / 0.95);
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, hsl(230 80% 55%), hsl(210 90% 55%));
+    background: linear-gradient(135deg, hsl(var(--foreground)), hsl(var(--muted-foreground)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  .enterprise-gradient {
-    background: linear-gradient(135deg, hsl(230 80% 55%) 0%, hsl(210 90% 55%) 50%, hsl(230 80% 60%) 100%);
-  }
-
   .subtle-grid {
     background-image: 
-      linear-gradient(to right, hsl(220 15% 90% / 0.5) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(220 15% 90% / 0.5) 1px, transparent 1px);
+      linear-gradient(to right, hsl(var(--border) / 0.3) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.3) 1px, transparent 1px);
     background-size: 24px 24px;
   }
 }
