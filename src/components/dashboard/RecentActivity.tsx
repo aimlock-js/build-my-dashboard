@@ -53,27 +53,27 @@ const activities: ActivityItem[] = [
 const typeConfig = {
   order: {
     icon: FileText,
-    iconBg: "bg-info/10",
+    iconBg: "bg-info/15",
     iconColor: "text-info",
   },
   customer: {
     icon: User,
-    iconBg: "bg-primary/10",
+    iconBg: "bg-primary/15",
     iconColor: "text-primary",
   },
   completed: {
     icon: CheckCircle,
-    iconBg: "bg-success/10",
+    iconBg: "bg-success/15",
     iconColor: "text-success",
   },
   pending: {
     icon: Clock,
-    iconBg: "bg-warning/10",
+    iconBg: "bg-warning/15",
     iconColor: "text-warning",
   },
   alert: {
     icon: AlertCircle,
-    iconBg: "bg-destructive/10",
+    iconBg: "bg-destructive/15",
     iconColor: "text-destructive",
   },
 };
@@ -83,14 +83,14 @@ export function RecentActivity() {
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-card rounded-xl p-5 card-shadow border border-border h-full"
+      className="bg-card rounded-2xl p-6 card-shadow border border-border h-full"
     >
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-5">
         <div>
           <h3 className="text-base font-semibold text-foreground">Atividade Recente</h3>
           <p className="text-xs text-muted-foreground mt-0.5">Últimas atualizações</p>
         </div>
-        <button className="p-1.5 rounded-lg hover:bg-muted transition-colors">
+        <button className="p-2 rounded-xl hover:bg-muted transition-colors">
           <MoreHorizontal size={16} className="text-muted-foreground" />
         </button>
       </div>
@@ -106,9 +106,9 @@ export function RecentActivity() {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer group"
+              className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted/50 transition-colors cursor-pointer group"
             >
-              <div className={`w-9 h-9 rounded-lg ${config.iconBg} flex items-center justify-center shrink-0`}>
+              <div className={`w-10 h-10 rounded-xl ${config.iconBg} flex items-center justify-center shrink-0`}>
                 <Icon size={16} className={config.iconColor} />
               </div>
 
@@ -125,7 +125,7 @@ export function RecentActivity() {
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
                   <p className="text-xs text-muted-foreground truncate">{activity.description}</p>
-                  <span className="text-xs text-muted-foreground/60">• {activity.time}</span>
+                  <span className="text-xs text-muted-foreground/50">• {activity.time}</span>
                 </div>
               </div>
             </motion.div>
@@ -133,7 +133,7 @@ export function RecentActivity() {
         })}
       </div>
 
-      <button className="w-full mt-3 py-2 text-xs font-medium text-primary hover:bg-primary/5 rounded-lg transition-colors">
+      <button className="w-full mt-4 py-2.5 text-xs font-semibold text-primary hover:bg-primary/10 rounded-xl transition-colors">
         Ver todas as atividades
       </button>
     </motion.div>

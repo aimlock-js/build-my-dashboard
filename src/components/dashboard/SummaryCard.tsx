@@ -20,19 +20,19 @@ export function SummaryCard({ label, value, change, icon, iconBg, index = 0 }: S
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.1 }}
       whileHover={{ x: 4 }}
-      className="bg-card rounded-xl p-4 card-shadow flex items-center gap-4 border border-border hover:shadow-md transition-all duration-200 group"
+      className="bg-card rounded-2xl p-5 card-shadow flex items-center gap-4 border border-border hover:border-primary/20 transition-all duration-300 group hover-glow"
     >
-      <div className={`w-12 h-12 rounded-lg ${iconBg} flex items-center justify-center group-hover:scale-105 transition-transform`}>
+      <div className={`w-14 h-14 rounded-xl ${iconBg} flex items-center justify-center group-hover:scale-105 transition-transform`}>
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs text-muted-foreground font-medium mb-0.5">{label}</p>
-        <p className="text-lg font-bold text-foreground">{value}</p>
+        <p className="text-xs text-muted-foreground font-medium mb-1">{label}</p>
+        <p className="text-xl font-bold text-foreground">{value}</p>
       </div>
-      <div className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold ${
+      <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold ${
         change.isPositive 
-          ? "bg-success/10 text-success" 
-          : "bg-destructive/10 text-destructive"
+          ? "bg-success/15 text-success" 
+          : "bg-destructive/15 text-destructive"
       }`}>
         {change.isPositive ? (
           <ArrowUpRight size={12} />

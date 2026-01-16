@@ -8,7 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { motion } from "framer-motion";
-import { TrendingUp, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 
 const data = [
   { day: "01", vendas: 12000, custos: 6000, lucro: 6000 },
@@ -36,9 +36,9 @@ const data = [
 ];
 
 const legendItems = [
-  { label: "Vendas", color: "hsl(160, 65%, 40%)" },
-  { label: "Custos", color: "hsl(210, 90%, 55%)" },
-  { label: "Lucro", color: "hsl(38, 92%, 50%)" },
+  { label: "Vendas", color: "hsl(142, 71%, 45%)" },
+  { label: "Custos", color: "hsl(217, 91%, 60%)" },
+  { label: "Lucro", color: "hsl(262, 83%, 58%)" },
 ];
 
 export function DailyEvolutionChart() {
@@ -46,7 +46,7 @@ export function DailyEvolutionChart() {
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-card rounded-xl p-6 card-shadow border border-border h-full"
+      className="bg-card rounded-2xl p-6 card-shadow border border-border h-full"
     >
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -69,7 +69,7 @@ export function DailyEvolutionChart() {
               </div>
             ))}
           </div>
-          <button className="p-1.5 rounded-lg hover:bg-muted transition-colors">
+          <button className="p-2 rounded-xl hover:bg-muted transition-colors">
             <MoreHorizontal size={16} className="text-muted-foreground" />
           </button>
         </div>
@@ -80,29 +80,29 @@ export function DailyEvolutionChart() {
           <AreaChart data={data}>
             <defs>
               <linearGradient id="vendas" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(160, 65%, 40%)" stopOpacity={0.15}/>
-                <stop offset="95%" stopColor="hsl(160, 65%, 40%)" stopOpacity={0}/>
+                <stop offset="5%" stopColor="hsl(142, 71%, 45%)" stopOpacity={0.2}/>
+                <stop offset="95%" stopColor="hsl(142, 71%, 45%)" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="custos" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(210, 90%, 55%)" stopOpacity={0.15}/>
-                <stop offset="95%" stopColor="hsl(210, 90%, 55%)" stopOpacity={0}/>
+                <stop offset="5%" stopColor="hsl(217, 91%, 60%)" stopOpacity={0.2}/>
+                <stop offset="95%" stopColor="hsl(217, 91%, 60%)" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="lucro" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(38, 92%, 50%)" stopOpacity={0.15}/>
-                <stop offset="95%" stopColor="hsl(38, 92%, 50%)" stopOpacity={0}/>
+                <stop offset="5%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 15%, 92%)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(240, 10%, 14%)" vertical={false} />
             <XAxis
               dataKey="day"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "hsl(220, 10%, 50%)", fontSize: 11 }}
+              tick={{ fill: "hsl(240, 5%, 55%)", fontSize: 11 }}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "hsl(220, 10%, 50%)", fontSize: 11 }}
+              tick={{ fill: "hsl(240, 5%, 55%)", fontSize: 11 }}
               tickFormatter={(value) =>
                 value >= 1000 ? `${(value / 1000).toFixed(0)}k` : value
               }
@@ -110,11 +110,12 @@ export function DailyEvolutionChart() {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(0, 0%, 100%)",
-                border: "1px solid hsl(220, 15%, 90%)",
-                borderRadius: "8px",
-                boxShadow: "0 4px 12px -2px rgb(0 0 0 / 0.1)",
+                backgroundColor: "hsl(240, 10%, 8%)",
+                border: "1px solid hsl(240, 10%, 14%)",
+                borderRadius: "12px",
+                boxShadow: "0 8px 24px -4px rgb(0 0 0 / 0.3)",
                 fontSize: "12px",
+                color: "hsl(0, 0%, 98%)"
               }}
               formatter={(value: number) =>
                 new Intl.NumberFormat("pt-BR", {
@@ -126,7 +127,7 @@ export function DailyEvolutionChart() {
             <Area
               type="monotone"
               dataKey="vendas"
-              stroke="hsl(160, 65%, 40%)"
+              stroke="hsl(142, 71%, 45%)"
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#vendas)"
@@ -134,7 +135,7 @@ export function DailyEvolutionChart() {
             <Area
               type="monotone"
               dataKey="custos"
-              stroke="hsl(210, 90%, 55%)"
+              stroke="hsl(217, 91%, 60%)"
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#custos)"
@@ -142,8 +143,8 @@ export function DailyEvolutionChart() {
             <Area
               type="monotone"
               dataKey="lucro"
-              stroke="hsl(38, 92%, 50%)"
-              strokeWidth={2}
+              stroke="hsl(262, 83%, 58%)"
+              strokeWidth={2.5}
               fillOpacity={1}
               fill="url(#lucro)"
             />
