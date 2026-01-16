@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, TrendingUp, Calendar, Target, Bike } from "lucide-react";
+import { ArrowRight, TrendingUp, Target, Bike, Sparkles } from "lucide-react";
 
 export function WelcomeBanner() {
   const currentHour = new Date().getHours();
@@ -10,19 +10,24 @@ export function WelcomeBanner() {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-500 via-orange-600 to-red-600 p-6 mb-6"
+      className="relative overflow-hidden rounded-2xl gradient-primary p-6 mb-6"
     >
-      {/* Subtle pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0 subtle-grid" />
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
+        <div className="absolute inset-0 subtle-grid opacity-20" />
       </div>
       
       <div className="relative flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-white/70 text-sm font-medium mb-1">
-            {greeting}, Ricardo
-          </p>
-          <h2 className="text-xl font-bold text-white mb-2">
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles size={14} className="text-white/70" />
+            <p className="text-white/70 text-sm font-medium">
+              {greeting}, Ricardo
+            </p>
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">
             Aqui está o resumo da sua oficina
           </h2>
           <p className="text-white/70 text-sm max-w-lg">
@@ -31,38 +36,47 @@ export function WelcomeBanner() {
           </p>
           
           <motion.button 
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.02, x: 4 }}
             whileTap={{ scale: 0.98 }}
-            className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg text-white text-sm font-medium transition-all"
+            className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl text-white text-sm font-semibold transition-all border border-white/10"
           >
             Ver ordens pendentes
-            <ArrowRight size={14} />
+            <ArrowRight size={16} />
           </motion.button>
         </div>
 
         {/* Stats */}
-        <div className="hidden lg:flex items-center gap-6">
-          <div className="text-center px-4 py-3 rounded-lg bg-white/10 backdrop-blur-sm">
-            <div className="flex items-center justify-center gap-1 mb-1">
+        <div className="hidden lg:flex items-center gap-4">
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            className="text-center px-5 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10"
+          >
+            <div className="flex items-center justify-center gap-1.5 mb-1">
               <TrendingUp size={14} className="text-green-300" />
-              <span className="text-green-300 font-bold text-sm">+18.5%</span>
+              <span className="text-green-300 font-bold text-base">+18.5%</span>
             </div>
-            <p className="text-white/60 text-xs">Faturamento</p>
-          </div>
-          <div className="text-center px-4 py-3 rounded-lg bg-white/10 backdrop-blur-sm">
-            <div className="flex items-center justify-center gap-1 mb-1">
+            <p className="text-white/60 text-xs font-medium">Faturamento</p>
+          </motion.div>
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            className="text-center px-5 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10"
+          >
+            <div className="flex items-center justify-center gap-1.5 mb-1">
               <Target size={14} className="text-yellow-300" />
-              <span className="text-white font-bold text-sm">92%</span>
+              <span className="text-white font-bold text-base">92%</span>
             </div>
-            <p className="text-white/60 text-xs">Meta mensal</p>
-          </div>
-          <div className="text-center px-4 py-3 rounded-lg bg-white/10 backdrop-blur-sm">
-            <div className="flex items-center justify-center gap-1 mb-1">
+            <p className="text-white/60 text-xs font-medium">Meta mensal</p>
+          </motion.div>
+          <motion.div 
+            whileHover={{ scale: 1.02 }}
+            className="text-center px-5 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10"
+          >
+            <div className="flex items-center justify-center gap-1.5 mb-1">
               <Bike size={14} className="text-white" />
-              <span className="text-white font-bold text-sm">47</span>
+              <span className="text-white font-bold text-base">47</span>
             </div>
-            <p className="text-white/60 text-xs">Motos atendidas</p>
-          </div>
+            <p className="text-white/60 text-xs font-medium">Motos atendidas</p>
+          </motion.div>
         </div>
       </div>
     </motion.div>

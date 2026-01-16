@@ -13,13 +13,13 @@ import {
   Settings,
   Shield,
   ChevronDown,
-  ChevronRight,
   Search,
   LogOut,
   User,
   FileText,
   Boxes,
   ClipboardList,
+  Sparkles,
 } from "lucide-react";
 
 interface MenuItem {
@@ -120,22 +120,22 @@ export function Sidebar() {
   return (
     <aside className="w-[260px] min-h-screen bg-sidebar flex flex-col border-r border-sidebar-border">
       {/* Logo */}
-      <div className="h-14 px-4 flex items-center border-b border-sidebar-border">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center">
-            <Bike className="text-background" size={16} />
+      <div className="h-16 px-5 flex items-center border-b border-sidebar-border">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center glow-primary">
+            <Bike className="text-white" size={18} />
           </div>
           <div className="flex flex-col">
-            <span className="text-sidebar-foreground font-semibold text-sm tracking-tight">MOTOTECH</span>
-            <span className="text-sidebar-muted text-[10px] font-medium">Gestão de Oficina</span>
+            <span className="text-sidebar-foreground font-bold text-sm tracking-tight">MOTOTECH</span>
+            <span className="text-sidebar-muted text-[10px] font-medium">Sistema de Gestão</span>
           </div>
         </div>
       </div>
 
       {/* Search */}
-      <div className="px-3 py-3">
-        <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-sidebar-accent border border-sidebar-border text-sidebar-muted text-sm">
-          <Search size={14} />
+      <div className="px-4 py-4">
+        <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-sidebar-accent/50 border border-sidebar-border text-sidebar-muted text-sm transition-all focus-within:border-primary/50 focus-within:bg-sidebar-accent">
+          <Search size={15} className="text-sidebar-muted" />
           <input
             type="text"
             placeholder="Buscar..."
@@ -143,13 +143,13 @@ export function Sidebar() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="flex-1 bg-transparent outline-none text-sidebar-foreground placeholder:text-sidebar-muted text-sm"
           />
-          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-sidebar-border">⌘K</span>
+          <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-sidebar-border text-sidebar-muted">⌘K</span>
         </div>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-1 overflow-y-auto">
-        <ul className="space-y-0.5">
+        <ul className="space-y-1">
           {menuItems.map((item) => {
             const hasChildren = item.children && item.children.length > 0;
             const isExpanded = expandedItems.includes(item.label);
@@ -161,19 +161,19 @@ export function Sidebar() {
                   <>
                     <button
                       onClick={() => toggleExpand(item.label)}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                         itemActive
-                          ? "bg-sidebar-accent text-sidebar-foreground"
-                          : "text-sidebar-muted hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                          ? "bg-primary/10 text-primary"
+                          : "text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="opacity-70">{item.icon}</span>
+                        <span className={itemActive ? "text-primary" : "opacity-70"}>{item.icon}</span>
                         <span>{item.label}</span>
                       </div>
                       <motion.div
                         animate={{ rotate: isExpanded ? 0 : -90 }}
-                        transition={{ duration: 0.15 }}
+                        transition={{ duration: 0.2 }}
                       >
                         <ChevronDown size={14} className="opacity-50" />
                       </motion.div>
@@ -185,8 +185,8 @@ export function Sidebar() {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.15 }}
-                          className="overflow-hidden ml-3 mt-0.5 border-l border-sidebar-border"
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden ml-4 mt-1 border-l-2 border-sidebar-border"
                         >
                           {item.children?.map((child) => {
                             const childActive = isActive(child.path);
@@ -194,15 +194,12 @@ export function Sidebar() {
                               <li key={child.label}>
                                 <Link to={child.path || "#"}>
                                   <div
-                                    className={`flex items-center gap-2 px-4 py-1.5 text-sm transition-colors ${
+                                    className={`flex items-center gap-2.5 px-4 py-2 text-sm transition-all duration-200 ${
                                       childActive
-                                        ? "text-foreground font-medium"
+                                        ? "text-primary font-medium border-l-2 border-primary -ml-[2px]"
                                         : "text-sidebar-muted hover:text-sidebar-foreground"
                                     }`}
                                   >
-                                    {childActive && (
-                                      <span className="w-1 h-1 rounded-full bg-foreground mr-1" />
-                                    )}
                                     <span>{child.label}</span>
                                   </div>
                                 </Link>
@@ -216,18 +213,18 @@ export function Sidebar() {
                 ) : (
                   <Link to={item.path || "#"}>
                     <div
-                      className={`flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                         itemActive
-                          ? "bg-sidebar-accent text-sidebar-foreground"
-                          : "text-sidebar-muted hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                          ? "bg-primary/10 text-primary"
+                          : "text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="opacity-70">{item.icon}</span>
+                        <span className={itemActive ? "text-primary" : "opacity-70"}>{item.icon}</span>
                         <span>{item.label}</span>
                       </div>
                       {item.badge && (
-                        <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-warning text-warning-foreground">
+                        <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-primary text-primary-foreground">
                           {item.badge}
                         </span>
                       )}
@@ -240,17 +237,33 @@ export function Sidebar() {
         </ul>
       </nav>
 
+      {/* Pro Badge */}
+      <div className="px-4 py-3">
+        <div className="p-4 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles size={16} className="text-primary" />
+            <span className="text-sm font-semibold text-foreground">Upgrade Pro</span>
+          </div>
+          <p className="text-xs text-muted-foreground mb-3">
+            Desbloqueie recursos avançados
+          </p>
+          <button className="w-full py-2 rounded-lg gradient-primary text-white text-xs font-semibold hover:opacity-90 transition-opacity">
+            Saiba mais
+          </button>
+        </div>
+      </div>
+
       {/* User Section */}
-      <div className="p-3 border-t border-sidebar-border">
-        <div className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-sidebar-accent transition-colors cursor-pointer">
-          <div className="w-8 h-8 rounded-full bg-sidebar-accent flex items-center justify-center">
-            <User size={14} className="text-sidebar-muted" />
+      <div className="p-4 border-t border-sidebar-border">
+        <div className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-sidebar-accent transition-colors cursor-pointer">
+          <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
+            <span className="text-xs font-bold text-white">RC</span>
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-sidebar-foreground truncate">Ricardo Costa</p>
             <p className="text-[11px] text-sidebar-muted truncate">Gerente</p>
           </div>
-          <LogOut size={14} className="text-sidebar-muted hover:text-sidebar-foreground transition-colors" />
+          <LogOut size={16} className="text-sidebar-muted hover:text-primary transition-colors" />
         </div>
       </div>
     </aside>

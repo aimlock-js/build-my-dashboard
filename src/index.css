@@ -6,69 +6,73 @@
 
 @layer base {
   :root {
-    /* ChatGPT-inspired dark neutral theme */
-    --background: 220 13% 10%;
-    --foreground: 220 9% 94%;
+    /* Lovable-inspired dark professional theme with violet accents */
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
 
-    --card: 220 13% 13%;
-    --card-foreground: 220 9% 94%;
+    --card: 240 10% 6%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 220 13% 15%;
-    --popover-foreground: 220 9% 94%;
+    --popover: 240 10% 8%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 220 9% 94%;
-    --primary-foreground: 220 13% 10%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 13% 18%;
-    --secondary-foreground: 220 9% 80%;
+    --secondary: 240 10% 10%;
+    --secondary-foreground: 0 0% 85%;
 
-    --muted: 220 13% 18%;
-    --muted-foreground: 220 9% 55%;
+    --muted: 240 10% 12%;
+    --muted-foreground: 240 5% 55%;
 
-    --accent: 220 13% 20%;
-    --accent-foreground: 220 9% 94%;
+    --accent: 262 83% 58%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62% 55%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 142 55% 45%;
+    --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 10%;
 
-    --info: 210 80% 55%;
+    --info: 217 91% 60%;
     --info-foreground: 0 0% 100%;
 
-    --border: 220 13% 20%;
-    --input: 220 13% 20%;
-    --ring: 220 9% 70%;
+    --border: 240 10% 14%;
+    --input: 240 10% 14%;
+    --ring: 262 83% 58%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* Sidebar - Slightly lighter than background */
-    --sidebar-background: 220 13% 12%;
-    --sidebar-foreground: 220 9% 90%;
-    --sidebar-primary: 220 9% 94%;
-    --sidebar-primary-foreground: 220 13% 10%;
-    --sidebar-accent: 220 13% 18%;
-    --sidebar-accent-foreground: 220 9% 94%;
-    --sidebar-border: 220 13% 18%;
-    --sidebar-ring: 220 9% 70%;
-    --sidebar-muted: 220 9% 50%;
+    /* Sidebar */
+    --sidebar-background: 240 10% 5%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 262 83% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 10% 10%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 10% 12%;
+    --sidebar-ring: 262 83% 58%;
+    --sidebar-muted: 240 5% 50%;
 
-    /* Chart colors - Neutral with accent */
-    --chart-1: 142 55% 45%;
-    --chart-2: 210 80% 55%;
-    --chart-3: 38 92% 50%;
-    --chart-4: 262 60% 55%;
-    --chart-5: 0 62% 55%;
+    /* Chart colors */
+    --chart-1: 262 83% 58%;
+    --chart-2: 217 91% 60%;
+    --chart-3: 142 71% 45%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 0 72% 51%;
 
     /* Metric accent colors */
-    --metric-blue: 210 80% 55%;
-    --metric-green: 142 55% 45%;
+    --metric-blue: 217 91% 60%;
+    --metric-green: 142 71% 45%;
     --metric-yellow: 38 92% 50%;
-    --metric-purple: 262 60% 55%;
+    --metric-purple: 262 83% 58%;
+
+    /* Gradient colors */
+    --gradient-start: 262 83% 58%;
+    --gradient-end: 280 87% 65%;
   }
 }
 
@@ -85,8 +89,8 @@
 
   /* Custom scrollbar for dark theme */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
@@ -95,68 +99,101 @@
 
   ::-webkit-scrollbar-thumb {
     background: hsl(var(--border));
-    border-radius: 3px;
+    border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground));
+    background: hsl(var(--muted-foreground) / 0.5);
   }
 }
 
 @layer utilities {
   .dashboard-shadow {
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.2);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3);
   }
   
   .card-shadow {
     box-shadow: 
-      0 0 0 1px hsl(var(--border) / 0.5),
-      0 1px 2px -1px rgb(0 0 0 / 0.15),
-      0 4px 8px -2px rgb(0 0 0 / 0.1);
+      0 0 0 1px hsl(var(--border)),
+      0 2px 4px -1px rgb(0 0 0 / 0.2),
+      0 4px 8px -2px rgb(0 0 0 / 0.15);
   }
   
   .card-shadow-hover {
     box-shadow: 
-      0 0 0 1px hsl(var(--border) / 0.6),
-      0 2px 4px -1px rgb(0 0 0 / 0.2),
-      0 8px 16px -4px rgb(0 0 0 / 0.15);
+      0 0 0 1px hsl(var(--primary) / 0.3),
+      0 4px 8px -2px rgb(0 0 0 / 0.25),
+      0 8px 16px -4px rgb(0 0 0 / 0.2);
   }
 
   .card-shadow-lg {
     box-shadow: 
-      0 0 0 1px hsl(var(--border) / 0.6),
-      0 4px 8px -2px rgb(0 0 0 / 0.2),
-      0 16px 32px -8px rgb(0 0 0 / 0.25);
+      0 0 0 1px hsl(var(--border)),
+      0 8px 16px -4px rgb(0 0 0 / 0.3),
+      0 16px 32px -8px rgb(0 0 0 / 0.35);
   }
 
   .metric-card-shadow {
     box-shadow: 
-      0 0 0 1px hsl(var(--border) / 0.5),
-      0 2px 4px -1px rgb(0 0 0 / 0.15),
-      0 6px 12px -3px rgb(0 0 0 / 0.1);
+      0 0 0 1px hsl(var(--border)),
+      0 2px 8px -2px rgb(0 0 0 / 0.2),
+      0 8px 16px -4px rgb(0 0 0 / 0.15);
   }
 
   .glass-effect {
-    backdrop-filter: blur(16px);
-    background: hsl(var(--card) / 0.9);
+    backdrop-filter: blur(20px);
+    background: hsl(var(--card) / 0.8);
   }
 
   .glass-dark {
-    backdrop-filter: blur(16px);
-    background: hsl(var(--background) / 0.95);
+    backdrop-filter: blur(20px);
+    background: hsl(var(--background) / 0.9);
+  }
+
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, hsl(var(--foreground)), hsl(var(--muted-foreground)));
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--gradient-end)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
   .subtle-grid {
     background-image: 
-      linear-gradient(to right, hsl(var(--border) / 0.3) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(var(--border) / 0.3) 1px, transparent 1px);
-    background-size: 24px 24px;
+      linear-gradient(to right, hsl(var(--border) / 0.2) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.2) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3), 0 0 40px hsl(var(--primary) / 0.1);
+  }
+
+  .hover-glow {
+    transition: all 0.3s ease;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.2), 0 0 40px hsl(var(--primary) / 0.05);
   }
 }
