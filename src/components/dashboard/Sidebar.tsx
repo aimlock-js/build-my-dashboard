@@ -21,21 +21,33 @@ interface MenuItem {
 
 const menuGroups = [
   {
-    label: "PRINCIPAL",
+    label: "VISÃO GERAL",
     items: [
       { 
         icon: <LayoutDashboard size={18} />, 
-        label: "Dashboard", 
+        label: "Painel Principal", 
         path: "/" 
+      },
+    ]
+  },
+  {
+    label: "GESTÃO",
+    items: [
+      { 
+        icon: <FileText size={18} />, 
+        label: "Operações",
+        children: [
+          { label: "Ordens de Serviço", path: "/ordens-servico" },
+          { label: "Clientes", path: "/clientes" },
+          { label: "Frota de Motos", path: "/motos" },
+        ]
       },
       { 
         icon: <FileText size={18} />, 
-        label: "Cadastros",
+        label: "Estoque",
         children: [
-          { label: "Clientes", path: "/clientes" },
-          { label: "Motos", path: "/motos" },
-          { label: "Peças", path: "/pecas-estoque" },
-          { label: "Serviços", path: "/ordens-servico" },
+          { label: "Peças e Componentes", path: "/pecas-estoque" },
+          { label: "Fornecedores", path: "/fornecedores" },
         ]
       },
     ]
@@ -45,30 +57,42 @@ const menuGroups = [
     items: [
       { 
         icon: <FileText size={18} />, 
-        label: "Clientes",
-        children: [
-          { label: "Lista de Clientes", path: "/clientes" },
-        ]
+        label: "Controle Financeiro",
+        path: "/financeiro"
       },
       { 
         icon: <FileText size={18} />, 
-        label: "Vendas",
-        path: "/financeiro"
+        label: "Faturamento",
+        children: [
+          { label: "Notas Fiscais", path: "/fiscal" },
+          { label: "Contas a Receber", path: "/contas-receber" },
+          { label: "Contas a Pagar", path: "/contas-pagar" },
+        ]
       },
     ]
   },
   {
-    label: "CONFIGURAÇÕES",
+    label: "ANÁLISES",
     items: [
       { 
         icon: <FileText size={18} />, 
         label: "Relatórios", 
         path: "/relatorios" 
       },
+    ]
+  },
+  {
+    label: "SISTEMA",
+    items: [
       { 
         icon: <FileText size={18} />, 
         label: "Configurações", 
         path: "/configuracoes" 
+      },
+      { 
+        icon: <FileText size={18} />, 
+        label: "Administração", 
+        path: "/administrador" 
       },
     ]
   },
