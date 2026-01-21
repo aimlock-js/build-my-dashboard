@@ -1,15 +1,11 @@
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { MetricCard } from "@/components/dashboard/MetricCard";
-import { DailyEvolutionChart } from "@/components/dashboard/DailyEvolutionChart";
-import { SummaryCard } from "@/components/dashboard/SummaryCard";
-import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { WelcomeBanner } from "@/components/dashboard/WelcomeBanner";
-import { QuickActions } from "@/components/dashboard/QuickActions";
-import { StatusOverview } from "@/components/dashboard/StatusOverview";
-import { TopProducts } from "@/components/dashboard/TopProducts";
-import { NotificationPanel } from "@/components/dashboard/NotificationPanel";
-import { DollarSign, ShoppingCart, TrendingUp, Users } from "lucide-react";
+import { OrderSummary } from "@/components/dashboard/OrderSummary";
+import { SalesChart } from "@/components/dashboard/SalesChart";
+import { VisitorsCard } from "@/components/dashboard/VisitorsCard";
+import { QuickLinks } from "@/components/dashboard/QuickLinks";
 
 const Index = () => {
   return (
@@ -23,127 +19,54 @@ const Index = () => {
           {/* Welcome Banner */}
           <WelcomeBanner />
 
-          {/* Quick Actions */}
-          <QuickActions />
+          {/* Order Summary */}
+          <OrderSummary />
 
-          {/* Status Overview */}
-          <StatusOverview />
+          {/* Section Title - Métricas */}
+          <h2 className="text-base font-semibold text-foreground mb-4">Métricas do Período</h2>
 
-          {/* Section Title */}
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-semibold text-foreground">Métricas do Período</h2>
-              <p className="text-xs text-muted-foreground">Comparativo com período anterior</p>
-            </div>
-            <button className="text-xs text-primary font-medium hover:underline">
-              Ver relatório completo
-            </button>
-          </div>
-
-          {/* Top Metrics Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
+          {/* Metrics Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
             <MetricCard
-              title="Faturamento"
+              title="Vendas Totais"
               value="R$ 89.450,00"
               description="Valor total movimentado na loja, sem custos"
               change={{ value: "+18,5%", isPositive: true }}
               index={0}
             />
             <MetricCard
-              title="Vendas"
-              value="156"
-              description="Total de pedidos realizados na loja"
-              change={{ value: "+24", isPositive: true }}
-              index={1}
-            />
-            <MetricCard
-              title="Taxa de conversão"
-              value="42,7%"
-              description="Pedidos aprovados em relação a carrinhos"
-              change={{ value: "+3,2%", isPositive: true }}
-              index={2}
-            />
-            <MetricCard
-              title="Ticket médio"
-              value="R$ 573,40"
-              description="Valor médio gasto por pedido na loja"
-              change={{ value: "+12,8%", isPositive: true }}
-              index={3}
-            />
-          </div>
-
-          {/* Second Metrics Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-            <MetricCard
-              title="Custo Peças"
-              value="R$ 32.180,00"
-              description="Total gasto com peças no período"
-              change={{ value: "-8,4%", isPositive: true }}
-              index={4}
-            />
-            <MetricCard
               title="Lucro Líquido"
               value="R$ 38.240,00"
               description="Lucro após dedução de todos os custos"
               change={{ value: "+22,3%", isPositive: true }}
-              index={5}
+              index={1}
             />
             <MetricCard
-              title="Tempo Médio OS"
-              value="1,2 dias"
-              description="Tempo médio de conclusão de serviços"
-              change={{ value: "-25%", isPositive: true }}
-              index={6}
+              title="Ordens Concluídas"
+              value="156"
+              description="Total de ordens finalizadas no período"
+              change={{ value: "+24", isPositive: true }}
+              index={2}
             />
             <MetricCard
-              title="Motos Atendidas"
-              value="47"
-              description="Total de motos que receberam serviços"
-              change={{ value: "+15", isPositive: true }}
-              index={7}
+              title="Margem de Lucro"
+              value="42,7%"
+              description="Percentual de lucro sobre vendas"
+              change={{ value: "+3,2%", isPositive: true }}
+              index={3}
             />
           </div>
 
-          {/* Chart and Summary Section */}
+          {/* Charts Section */}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 mb-6">
             <div className="xl:col-span-2">
-              <DailyEvolutionChart />
+              <SalesChart />
             </div>
-            
-            <div className="space-y-3">
-              <SummaryCard
-                label="Vendas"
-                value="R$ 80.317,20"
-                change={{ value: "-41,9%", isPositive: false }}
-                icon={<DollarSign size={22} className="text-success" />}
-                iconBg="bg-success/10"
-                index={0}
-              />
-              <SummaryCard
-                label="Custo"
-                value="R$ 45.986,92"
-                change={{ value: "-32,4%", isPositive: true }}
-                icon={<ShoppingCart size={22} className="text-info" />}
-                iconBg="bg-info/10"
-                index={1}
-              />
-              <SummaryCard
-                label="Retorno"
-                value="R$ 34.330,28"
-                change={{ value: "-51,1%", isPositive: false }}
-                icon={<TrendingUp size={22} className="text-warning" />}
-                iconBg="bg-warning/10"
-                index={2}
-              />
-            </div>
+            <VisitorsCard />
           </div>
 
-          {/* Bottom Section - 3 Columns */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-            <TopProducts />
-            <RecentActivity />
-            <NotificationPanel />
-          </div>
+          {/* Quick Links */}
+          <QuickLinks />
         </main>
       </div>
     </div>
