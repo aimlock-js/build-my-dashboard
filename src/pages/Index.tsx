@@ -9,7 +9,7 @@ import { QuickActions } from "@/components/dashboard/QuickActions";
 import { StatusOverview } from "@/components/dashboard/StatusOverview";
 import { TopProducts } from "@/components/dashboard/TopProducts";
 import { NotificationPanel } from "@/components/dashboard/NotificationPanel";
-import { DollarSign, ShoppingCart, TrendingUp, Users, Clock, Package, Wrench, Bike } from "lucide-react";
+import { DollarSign, ShoppingCart, TrendingUp, Users } from "lucide-react";
 
 const Index = () => {
   return (
@@ -45,37 +45,29 @@ const Index = () => {
             <MetricCard
               title="Faturamento"
               value="R$ 89.450,00"
+              description="Valor total movimentado na loja, sem custos"
               change={{ value: "+18,5%", isPositive: true }}
-              previousValue="R$ 75.420,00"
-              accentColor="blue"
-              icon={<DollarSign size={18} />}
               index={0}
             />
             <MetricCard
-              title="Lucro Líquido"
-              value="R$ 38.240,00"
-              change={{ value: "+22,3%", isPositive: true }}
-              previousValue="R$ 31.280,00"
-              accentColor="green"
-              icon={<TrendingUp size={18} />}
+              title="Vendas"
+              value="156"
+              description="Total de pedidos realizados na loja"
+              change={{ value: "+24", isPositive: true }}
               index={1}
             />
             <MetricCard
-              title="Serviços Realizados"
-              value="156"
-              change={{ value: "+24", isPositive: true }}
-              previousValue="132"
-              accentColor="yellow"
-              icon={<Wrench size={18} />}
+              title="Taxa de conversão"
+              value="42,7%"
+              description="Pedidos aprovados em relação a carrinhos"
+              change={{ value: "+3,2%", isPositive: true }}
               index={2}
             />
             <MetricCard
-              title="Margem de Lucro"
-              value="42,7%"
-              change={{ value: "+3,2%", isPositive: true }}
-              previousValue="39,5%"
-              accentColor="purple"
-              icon={<TrendingUp size={18} />}
+              title="Ticket médio"
+              value="R$ 573,40"
+              description="Valor médio gasto por pedido na loja"
+              change={{ value: "+12,8%", isPositive: true }}
               index={3}
             />
           </div>
@@ -85,37 +77,29 @@ const Index = () => {
             <MetricCard
               title="Custo Peças"
               value="R$ 32.180,00"
+              description="Total gasto com peças no período"
               change={{ value: "-8,4%", isPositive: true }}
-              previousValue="R$ 35.120,00"
-              accentColor="blue"
-              icon={<ShoppingCart size={18} />}
               index={4}
             />
             <MetricCard
-              title="Ticket Médio"
-              value="R$ 573,40"
-              change={{ value: "+12,8%", isPositive: true }}
-              previousValue="R$ 508,33"
-              accentColor="green"
-              icon={<DollarSign size={18} />}
+              title="Lucro Líquido"
+              value="R$ 38.240,00"
+              description="Lucro após dedução de todos os custos"
+              change={{ value: "+22,3%", isPositive: true }}
               index={5}
             />
             <MetricCard
               title="Tempo Médio OS"
               value="1,2 dias"
+              description="Tempo médio de conclusão de serviços"
               change={{ value: "-25%", isPositive: true }}
-              previousValue="1,6 dias"
-              accentColor="yellow"
-              icon={<Clock size={18} />}
               index={6}
             />
             <MetricCard
               title="Motos Atendidas"
               value="47"
+              description="Total de motos que receberam serviços"
               change={{ value: "+15", isPositive: true }}
-              previousValue="32"
-              accentColor="purple"
-              icon={<Bike size={18} />}
               index={7}
             />
           </div>
