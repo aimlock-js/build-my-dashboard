@@ -16,10 +16,12 @@ import {
   AlertCircle,
   Calendar,
   User,
-  Bike
+  Bike,
+  Settings2
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { NovaOSModal, OrdemServico } from "@/components/modals/NovaOSModal";
+import { GerenciarServicosModal, Servico } from "@/components/modals/GerenciarServicosModal";
 
 const initialOrdensServico: OrdemServico[] = [
   { 
@@ -94,7 +96,19 @@ const statusConfig = {
 const OrdensServico = () => {
   const [ordensServico, setOrdensServico] = useState<OrdemServico[]>(initialOrdensServico);
   const [modalOpen, setModalOpen] = useState(false);
+  const [servicosModalOpen, setServicosModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  
+  const [servicos, setServicos] = useState<Servico[]>([
+    { id: "serv-1", nome: "Troca de Óleo", valorBase: 80, tempoEstimado: "30min" },
+    { id: "serv-2", nome: "Troca de Kit Relação", valorBase: 450, tempoEstimado: "2h" },
+    { id: "serv-3", nome: "Revisão Completa 10.000km", valorBase: 680, tempoEstimado: "4h" },
+    { id: "serv-4", nome: "Troca de Pneus", valorBase: 350, tempoEstimado: "1h" },
+    { id: "serv-5", nome: "Balanceamento", valorBase: 60, tempoEstimado: "30min" },
+    { id: "serv-6", nome: "Troca de Pastilhas de Freio", valorBase: 180, tempoEstimado: "1h" },
+    { id: "serv-7", nome: "Diagnóstico Injeção", valorBase: 150, tempoEstimado: "1h" },
+    { id: "serv-8", nome: "Troca de Filtro de Ar", valorBase: 100, tempoEstimado: "30min" },
+  ]);
 
   const handleSaveOS = (novaOS: OrdemServico) => {
     setOrdensServico([novaOS, ...ordensServico]);
@@ -128,13 +142,23 @@ const OrdensServico = () => {
               <h1 className="text-2xl font-bold text-foreground">Ordens de Serviço</h1>
               <p className="text-sm text-muted-foreground">Gerencie todas as ordens de serviço da oficina</p>
             </div>
-            <Button 
-              onClick={() => setModalOpen(true)}
-              className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2"
-            >
-              <Plus size={16} />
-              Nova OS
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline"
+                onClick={() => setServicosModalOpen(true)}
+                className="gap-2"
+              >
+                <Settings2 size={16} />
+                Gerenciar Serviços
+              </Button>
+              <Button 
+                onClick={() => setModalOpen(true)}
+                className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2"
+              >
+                <Plus size={16} />
+                Nova OS
+              </Button>
+            </div>
           </div>
 
           {/* Stats Cards */}
@@ -271,7 +295,15 @@ const OrdensServico = () => {
       <NovaOSModal 
         open={modalOpen} 
         onOpenChange={setModalOpen} 
-        onSave={handleSaveOS} 
+        onSave={handleSaveOS}
+        servicos={servicos}
+      />
+
+      <GerenciarServicosModal
+        open={servicosModalOpen}
+        onOpenChange={setServicosModalOpen}
+        servicos={servicos}
+        onServicosChange={setServicos}
       />
     </div>
   );
