@@ -23,101 +23,69 @@ const Index = () => {
           <OrderSummary />
 
           {/* Section Title - Métricas */}
-          <h2 className="text-base font-semibold text-foreground mb-4">Indicadores de Performance</h2>
+          <h2 className="text-base font-semibold text-foreground mb-4">Métricas do Período</h2>
 
-          {/* Metrics Row 1 - Financial KPIs */}
+          {/* Metrics Row 1 - Financial */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
             <MetricCard
               title="Receita Bruta"
               value="R$ 127.850"
-              description="Faturamento total do período"
+              description="Faturamento total antes de deduções"
               change={{ value: "+18,5%", isPositive: true }}
               index={0}
             />
             <MetricCard
               title="Lucro Líquido"
               value="R$ 48.240"
-              description="Resultado após despesas e impostos"
+              description="Resultado após custos e impostos"
               change={{ value: "+22,3%", isPositive: true }}
               index={1}
             />
             <MetricCard
               title="Margem de Lucro"
               value="37,7%"
-              description="Rentabilidade operacional"
-              change={{ value: "+3,2pp", isPositive: true }}
+              description="Eficiência da operação"
+              change={{ value: "+3,2%", isPositive: true }}
               index={2}
             />
             <MetricCard
-              title="CAC"
-              value="R$ 89,50"
-              description="Custo de aquisição por cliente"
-              change={{ value: "-12,4%", isPositive: true }}
+              title="Custo Operacional"
+              value="R$ 79.610"
+              description="Despesas totais do período"
+              change={{ value: "-5,4%", isPositive: true }}
               index={3}
             />
           </div>
 
-          {/* Metrics Row 2 - Operational KPIs */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
+          {/* Metrics Row 2 - Operational */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
             <MetricCard
               title="Ordens de Serviço"
               value="186"
-              description="Total de OS no período"
+              description="Total de OS abertas no período"
               change={{ value: "+24", isPositive: true }}
               index={4}
             />
             <MetricCard
               title="Ticket Médio"
               value="R$ 687,50"
-              description="Receita média por serviço"
+              description="Valor médio por serviço"
               change={{ value: "+12,8%", isPositive: true }}
               index={5}
             />
             <MetricCard
               title="Taxa de Conversão"
               value="78,4%"
-              description="Orçamentos que viraram OS"
-              change={{ value: "+5,6pp", isPositive: true }}
+              description="Orçamentos convertidos em OS"
+              change={{ value: "+5,6%", isPositive: true }}
               index={6}
             />
             <MetricCard
-              title="LTV"
-              value="R$ 2.450"
-              description="Valor vitalício do cliente"
-              change={{ value: "+8,2%", isPositive: true }}
-              index={7}
-            />
-          </div>
-
-          {/* Metrics Row 3 - Performance KPIs */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-            <MetricCard
-              title="NPS Score"
-              value="72"
-              description="Índice de satisfação do cliente"
-              change={{ value: "+8", isPositive: true }}
-              index={8}
-            />
-            <MetricCard
-              title="Tempo Médio OS"
+              title="Tempo Médio"
               value="2.4 dias"
-              description="Prazo de conclusão de serviço"
+              description="Prazo médio de conclusão"
               change={{ value: "-0.3d", isPositive: true }}
-              index={9}
-            />
-            <MetricCard
-              title="Churn Rate"
-              value="2,8%"
-              description="Taxa de perda de clientes"
-              change={{ value: "-0,5pp", isPositive: true }}
-              index={10}
-            />
-            <MetricCard
-              title="MRR"
-              value="R$ 32.400"
-              description="Receita recorrente mensal"
-              change={{ value: "+15,3%", isPositive: true }}
-              index={11}
+              index={7}
             />
           </div>
 
