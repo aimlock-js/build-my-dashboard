@@ -21,32 +21,53 @@ interface MenuItem {
 
 const menuGroups = [
   {
-    label: "VISÃO GERAL",
+    label: "CENTRAL",
     items: [
       { 
         icon: <LayoutDashboard size={18} />, 
-        label: "Painel Principal", 
+        label: "Painel de Controle", 
         path: "/" 
       },
     ]
   },
   {
-    label: "GESTÃO",
+    label: "OPERAÇÕES",
     items: [
       { 
         icon: <FileText size={18} />, 
-        label: "Operações",
+        label: "Gestão de Serviços",
         children: [
           { label: "Ordens de Serviço", path: "/ordens-servico" },
-          { label: "Clientes", path: "/clientes" },
-          { label: "Frota de Motos", path: "/motos" },
+          { label: "Nova OS", path: "/ordens-servico?nova=true" },
         ]
       },
       { 
         icon: <FileText size={18} />, 
-        label: "Estoque",
+        label: "Atendimento",
         children: [
-          { label: "Peças e Componentes", path: "/pecas-estoque" },
+          { label: "Base de Clientes", path: "/clientes" },
+          { label: "Novo Cliente", path: "/clientes?novo=true" },
+        ]
+      },
+      { 
+        icon: <Bike size={18} />, 
+        label: "Veículos",
+        children: [
+          { label: "Frota Registrada", path: "/motos" },
+          { label: "Adicionar Moto", path: "/motos?nova=true" },
+        ]
+      },
+    ]
+  },
+  {
+    label: "INVENTÁRIO",
+    items: [
+      { 
+        icon: <FileText size={18} />, 
+        label: "Controle de Estoque",
+        children: [
+          { label: "Peças e Insumos", path: "/pecas-estoque" },
+          { label: "Adicionar Peça", path: "/pecas-estoque?nova=true" },
           { label: "Fornecedores", path: "/fornecedores" },
         ]
       },
@@ -57,14 +78,14 @@ const menuGroups = [
     items: [
       { 
         icon: <FileText size={18} />, 
-        label: "Controle Financeiro",
+        label: "Gestão Financeira",
         path: "/financeiro"
       },
       { 
         icon: <FileText size={18} />, 
         label: "Faturamento",
         children: [
-          { label: "Notas Fiscais", path: "/fiscal" },
+          { label: "Emissão Fiscal", path: "/fiscal" },
           { label: "Contas a Receber", path: "/contas-receber" },
           { label: "Contas a Pagar", path: "/contas-pagar" },
         ]
@@ -72,26 +93,26 @@ const menuGroups = [
     ]
   },
   {
-    label: "ANÁLISES",
+    label: "INTELIGÊNCIA",
     items: [
       { 
         icon: <FileText size={18} />, 
-        label: "Relatórios", 
+        label: "Relatórios e Análises", 
         path: "/relatorios" 
       },
     ]
   },
   {
-    label: "SISTEMA",
+    label: "PLATAFORMA",
     items: [
       { 
         icon: <FileText size={18} />, 
-        label: "Configurações", 
+        label: "Preferências", 
         path: "/configuracoes" 
       },
       { 
         icon: <FileText size={18} />, 
-        label: "Administração", 
+        label: "Área Administrativa", 
         path: "/administrador" 
       },
     ]
