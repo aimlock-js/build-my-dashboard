@@ -6,11 +6,15 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
+import { Plus } from "lucide-react";
+import { Servico } from "./NovoServicoModal";
 
 interface NovaOSModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (os: OrdemServico) => void;
+  servicos: Servico[];
+  onAddServico: () => void;
 }
 
 export interface OrdemServico {
@@ -27,7 +31,7 @@ export interface OrdemServico {
   observacoes?: string;
 }
 
-export function NovaOSModal({ open, onOpenChange, onSave }: NovaOSModalProps) {
+export function NovaOSModal({ open, onOpenChange, onSave, servicos, onAddServico }: NovaOSModalProps) {
   const [formData, setFormData] = useState({
     cliente: "",
     moto: "",
@@ -145,12 +149,32 @@ export function NovaOSModal({ open, onOpenChange, onSave }: NovaOSModalProps) {
 
           <div className="space-y-2">
             <Label htmlFor="servico">Serviço a Realizar *</Label>
-            <Input
-              id="servico"
-              placeholder="Ex: Troca de Kit Relação"
-              value={formData.servico}
-              onChange={(e) => setFormData({ ...formData, servico: e.target.value })}
-            />
+            <div className="flex gap-2">
+              <Select
+                value={formData.servico}
+                onValueChange={(value) => {
+                  setFormData({ ...formData, servico: value });
+                  const servicoSelecionado = servicos.find(s => s.nome === value);
+                  if (servicoSelecionado && servicoSelecionado.valorBase > 0) {
+                    setFormData(prev => ({ ...prev, servico: value, valor: String(servicoSelecionado.valorBase) }));
+                  }
+                }}
+              >
+                <SelectTrigger className="flex-1">
+                  <SelectValue placeholder="Selecione o serviço" />
+                </SelectTrigger>
+                <SelectContent>
+                  {servicos.map((servico) => (
+                    <SelectItem key={servico.id} value={servico.nome}>
+                      {servico.nome} {servico.valorBase > 0 && `- R$ ${servico.valorBase.toFixed(2)}`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button type="button" variant="outline" size="icon" onClick={onAddServico} title="Adicionar novo serviço">
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

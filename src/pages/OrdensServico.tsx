@@ -16,11 +16,23 @@ import {
   AlertCircle,
   Calendar,
   User,
-  Bike
+  Bike,
+  Settings2
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { NovaOSModal, OrdemServico } from "@/components/modals/NovaOSModal";
+import { NovoServicoModal, Servico } from "@/components/modals/NovoServicoModal";
 
+const initialServicos: Servico[] = [
+  { id: "SRV-001", nome: "Troca de Óleo", descricao: "Troca de óleo do motor", valorBase: 80, tempoEstimado: "30min", categoria: "Manutenção" },
+  { id: "SRV-002", nome: "Troca de Kit Relação", descricao: "Troca completa do kit relação", valorBase: 350, tempoEstimado: "2h", categoria: "Reparo" },
+  { id: "SRV-003", nome: "Revisão Completa 10.000km", descricao: "Revisão geral de 10.000km", valorBase: 450, tempoEstimado: "4h", categoria: "Revisão" },
+  { id: "SRV-004", nome: "Troca de Pneus", descricao: "Troca de pneus dianteiro e traseiro", valorBase: 150, tempoEstimado: "1h", categoria: "Reparo" },
+  { id: "SRV-005", nome: "Diagnóstico Injeção", descricao: "Diagnóstico do sistema de injeção eletrônica", valorBase: 120, tempoEstimado: "1h", categoria: "Diagnóstico" },
+  { id: "SRV-006", nome: "Troca de Óleo + Filtros", descricao: "Troca de óleo com filtros de óleo e ar", valorBase: 180, tempoEstimado: "45min", categoria: "Manutenção" },
+  { id: "SRV-007", nome: "Balanceamento", descricao: "Balanceamento de rodas", valorBase: 60, tempoEstimado: "30min", categoria: "Manutenção" },
+  { id: "SRV-008", nome: "Regulagem de Válvulas", descricao: "Regulagem completa das válvulas do motor", valorBase: 280, tempoEstimado: "3h", categoria: "Reparo" },
+];
 const initialOrdensServico: OrdemServico[] = [
   { 
     id: "OS-2024-001", 
@@ -93,11 +105,17 @@ const statusConfig = {
 
 const OrdensServico = () => {
   const [ordensServico, setOrdensServico] = useState<OrdemServico[]>(initialOrdensServico);
+  const [servicos, setServicos] = useState<Servico[]>(initialServicos);
   const [modalOpen, setModalOpen] = useState(false);
+  const [servicoModalOpen, setServicoModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSaveOS = (novaOS: OrdemServico) => {
     setOrdensServico([novaOS, ...ordensServico]);
+  };
+
+  const handleSaveServico = (novoServico: Servico) => {
+    setServicos([...servicos, novoServico]);
   };
 
   const filteredOrdens = ordensServico.filter(os => 
@@ -271,7 +289,15 @@ const OrdensServico = () => {
       <NovaOSModal 
         open={modalOpen} 
         onOpenChange={setModalOpen} 
-        onSave={handleSaveOS} 
+        onSave={handleSaveOS}
+        servicos={servicos}
+        onAddServico={() => setServicoModalOpen(true)}
+      />
+
+      <NovoServicoModal
+        open={servicoModalOpen}
+        onOpenChange={setServicoModalOpen}
+        onSave={handleSaveServico}
       />
     </div>
   );
