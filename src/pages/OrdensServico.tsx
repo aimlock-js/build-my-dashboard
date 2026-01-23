@@ -140,7 +140,7 @@ const OrdensServico = () => {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-2xl font-bold text-foreground">Ordens de Serviço</h1>
-              <p className="text-sm text-muted-foreground">Gerencie todas as ordens de serviço da oficina</p>
+              <p className="text-sm text-muted-foreground">Acompanhe o status, prazos e valores de cada atendimento</p>
             </div>
             <div className="flex gap-2">
               <Button 
