@@ -1,5 +1,5 @@
-import { Bell, ChevronDown, Calendar } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Bell, ChevronDown, Calendar, ChevronRight, Home } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,14 +9,46 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Bike, User, Settings, LogOut } from "lucide-react";
 
+const routeNames: Record<string, string> = {
+  "/": "Painel Principal",
+  "/ordens-servico": "Ordens de Serviço",
+  "/clientes": "Clientes",
+  "/motos": "Frota de Motos",
+  "/pecas-estoque": "Peças & Estoque",
+  "/financeiro": "Financeiro",
+  "/fiscal": "Faturamento",
+  "/relatorios": "Relatórios",
+  "/configuracoes": "Configurações",
+  "/administrador": "Administração",
+  "/perfil": "Meu Perfil",
+};
+
 export function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const currentPageName = routeNames[currentPath] || "Página";
+  const isHomePage = currentPath === "/";
 
   return (
     <header className="h-14 bg-background border-b border-border px-6 flex items-center justify-between sticky top-0 z-20">
-      {/* Left side - Page Title */}
-      <div className="flex items-center gap-4">
-        <h1 className="text-lg font-semibold text-foreground">Dashboard</h1>
+      {/* Left side - Breadcrumb */}
+      <div className="flex items-center gap-2">
+        {isHomePage ? (
+          <h1 className="text-lg font-semibold text-foreground">Painel Principal</h1>
+        ) : (
+          <nav className="flex items-center gap-2 text-sm">
+            <Link 
+              to="/" 
+              className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Home size={14} />
+              <span>Painel</span>
+            </Link>
+            <ChevronRight size={14} className="text-muted-foreground/50" />
+            <span className="font-medium text-foreground">{currentPageName}</span>
+          </nav>
+        )}
       </div>
 
       {/* Right side */}
