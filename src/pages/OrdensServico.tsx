@@ -139,8 +139,8 @@ const OrdensServico = () => {
           {/* Page Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Ordens de Serviço</h1>
-              <p className="text-sm text-muted-foreground">Acompanhe o status, prazos e valores de cada atendimento</p>
+              <h1 className="text-2xl font-bold text-foreground">Gestão de Atendimentos</h1>
+              <p className="text-sm text-muted-foreground">Controle completo de prazos, mecânicos e valores dos serviços</p>
             </div>
             <div className="flex gap-2">
               <Button 
