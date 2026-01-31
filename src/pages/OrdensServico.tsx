@@ -15,7 +15,9 @@ import {
   AlertCircle,
   User,
   Bike,
-  Settings2
+  Settings2,
+  Download,
+  X
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { NovaOSModal, OrdemServico } from "@/components/modals/NovaOSModal";
@@ -85,10 +87,10 @@ const initialOrdensServico: OrdemServico[] = [
 ];
 
 const statusConfig = {
-  aguardando: { label: "Aguardando", color: "bg-slate-100 text-slate-700 border-slate-200", icon: Clock },
-  em_andamento: { label: "Em Andamento", color: "bg-blue-100 text-blue-700 border-blue-200", icon: Wrench },
-  aguardando_peca: { label: "Aguard. Peça", color: "bg-amber-100 text-amber-700 border-amber-200", icon: AlertCircle },
-  concluida: { label: "Concluída", color: "bg-emerald-100 text-emerald-700 border-emerald-200", icon: CheckCircle2 },
+  aguardando: { label: "Aguardando", color: "bg-slate-100 text-slate-700 border-slate-200", activeColor: "bg-slate-600 text-white border-slate-600", icon: Clock },
+  em_andamento: { label: "Em Andamento", color: "bg-blue-100 text-blue-700 border-blue-200", activeColor: "bg-blue-600 text-white border-blue-600", icon: Wrench },
+  aguardando_peca: { label: "Aguard. Peça", color: "bg-amber-100 text-amber-700 border-amber-200", activeColor: "bg-amber-500 text-white border-amber-500", icon: AlertCircle },
+  concluida: { label: "Concluída", color: "bg-emerald-100 text-emerald-700 border-emerald-200", activeColor: "bg-emerald-600 text-white border-emerald-600", icon: CheckCircle2 },
 };
 
 const OrdensServico = () => {
@@ -125,11 +127,13 @@ const OrdensServico = () => {
   });
 
   const stats = [
-    { label: "Total Abertas", value: ordensServico.filter(os => os.status !== "concluida").length.toString(), color: "text-foreground" },
-    { label: "Em Andamento", value: ordensServico.filter(os => os.status === "em_andamento").length.toString(), color: "text-blue-600" },
-    { label: "Aguard. Peças", value: ordensServico.filter(os => os.status === "aguardando_peca").length.toString(), color: "text-amber-600" },
-    { label: "Concluídas", value: ordensServico.filter(os => os.status === "concluida").length.toString(), color: "text-emerald-600" },
+    { label: "Total Abertas", value: ordensServico.filter(os => os.status !== "concluida").length, color: "text-foreground", key: null },
+    { label: "Em Andamento", value: ordensServico.filter(os => os.status === "em_andamento").length, color: "text-blue-600", key: "em_andamento" },
+    { label: "Aguard. Peças", value: ordensServico.filter(os => os.status === "aguardando_peca").length, color: "text-amber-600", key: "aguardando_peca" },
+    { label: "Concluídas", value: ordensServico.filter(os => os.status === "concluida").length, color: "text-emerald-600", key: "concluida" },
   ];
+
+  const getStatusCount = (status: string) => ordensServico.filter(os => os.status === status).length;
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -164,8 +168,8 @@ const OrdensServico = () => {
             </div>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          {/* Stats Cards - Clickable */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             {stats.map((stat, i) => (
               <motion.div
                 key={i}
@@ -173,7 +177,12 @@ const OrdensServico = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Card className="border-border/50">
+                <Card 
+                  className={`border-border/50 cursor-pointer transition-all hover:shadow-md ${
+                    statusFilter === stat.key ? 'ring-2 ring-primary ring-offset-2' : ''
+                  }`}
+                  onClick={() => setStatusFilter(stat.key)}
+                >
                   <CardContent className="p-4">
                     <p className="text-sm text-muted-foreground">{stat.label}</p>
                     <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -183,9 +192,11 @@ const OrdensServico = () => {
             ))}
           </div>
 
+          {/* Search and Filters */}
           <Card className="mb-6 border-border/50">
             <CardContent className="p-4">
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                {/* Search */}
                 <div className="flex-1 min-w-[200px]">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
@@ -195,38 +206,88 @@ const OrdensServico = () => {
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
+                    {searchTerm && (
+                      <button 
+                        onClick={() => setSearchTerm("")}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Status:</span>
-                  <div className="flex gap-1.5">
-                    <Button
-                      variant={statusFilter === null ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setStatusFilter(null)}
-                      className="h-8 text-xs"
-                    >
-                      Todos
-                    </Button>
-                    {Object.entries(statusConfig).map(([key, config]) => {
-                      const Icon = config.icon;
-                      return (
-                        <Button
-                          key={key}
-                          variant={statusFilter === key ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setStatusFilter(key)}
-                          className="h-8 text-xs gap-1"
-                        >
-                          <Icon size={12} />
-                          {config.label}
-                        </Button>
-                      );
-                    })}
-                  </div>
+                {/* Status Filter Pills */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    onClick={() => setStatusFilter(null)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                      statusFilter === null 
+                        ? 'bg-primary text-primary-foreground shadow-sm' 
+                        : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                    }`}
+                  >
+                    Todos ({ordensServico.length})
+                  </button>
+                  {Object.entries(statusConfig).map(([key, config]) => {
+                    const Icon = config.icon;
+                    const count = getStatusCount(key);
+                    const isActive = statusFilter === key;
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => setStatusFilter(key)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                          isActive ? config.activeColor : `${config.color} hover:opacity-80`
+                        }`}
+                      >
+                        <Icon size={12} />
+                        {config.label}
+                        <span className={`ml-0.5 px-1.5 py-0.5 rounded-full text-[10px] ${
+                          isActive ? 'bg-white/20' : 'bg-black/10'
+                        }`}>
+                          {count}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
+
+                {/* Export Button */}
+                <Button variant="outline" size="sm" className="gap-2 shrink-0">
+                  <Download size={14} />
+                  Exportar
+                </Button>
               </div>
+
+              {/* Active Filter Indicator */}
+              {(statusFilter || searchTerm) && (
+                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border/50">
+                  <span className="text-xs text-muted-foreground">Filtros ativos:</span>
+                  {searchTerm && (
+                    <Badge variant="secondary" className="gap-1 text-xs">
+                      Busca: "{searchTerm}"
+                      <button onClick={() => setSearchTerm("")} className="ml-1 hover:text-foreground">
+                        <X size={10} />
+                      </button>
+                    </Badge>
+                  )}
+                  {statusFilter && (
+                    <Badge variant="secondary" className="gap-1 text-xs">
+                      Status: {statusConfig[statusFilter as keyof typeof statusConfig]?.label}
+                      <button onClick={() => setStatusFilter(null)} className="ml-1 hover:text-foreground">
+                        <X size={10} />
+                      </button>
+                    </Badge>
+                  )}
+                  <button 
+                    onClick={() => { setSearchTerm(""); setStatusFilter(null); }}
+                    className="text-xs text-primary hover:underline ml-auto"
+                  >
+                    Limpar filtros
+                  </button>
+                </div>
+              )}
             </CardContent>
           </Card>
 
