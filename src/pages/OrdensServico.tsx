@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { 
   Plus, 
   Search, 
+  Filter,
   MoreHorizontal, 
   Wrench, 
   Clock, 
@@ -15,13 +16,27 @@ import {
   AlertCircle,
   User,
   Bike,
-  Settings2,
-  Download,
-  X
+  Settings2
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { NovaOSModal, OrdemServico } from "@/components/modals/NovaOSModal";
 import { GerenciarServicosModal, Servico } from "@/components/modals/GerenciarServicosModal";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const initialOrdensServico: OrdemServico[] = [
   { 
@@ -87,10 +102,10 @@ const initialOrdensServico: OrdemServico[] = [
 ];
 
 const statusConfig = {
-  aguardando: { label: "Aguardando", color: "bg-slate-100 text-slate-700 border-slate-200", activeColor: "bg-slate-600 text-white border-slate-600", icon: Clock },
-  em_andamento: { label: "Em Andamento", color: "bg-blue-100 text-blue-700 border-blue-200", activeColor: "bg-blue-600 text-white border-blue-600", icon: Wrench },
-  aguardando_peca: { label: "Aguard. Peça", color: "bg-amber-100 text-amber-700 border-amber-200", activeColor: "bg-amber-500 text-white border-amber-500", icon: AlertCircle },
-  concluida: { label: "Concluída", color: "bg-emerald-100 text-emerald-700 border-emerald-200", activeColor: "bg-emerald-600 text-white border-emerald-600", icon: CheckCircle2 },
+  aguardando: { label: "Aguardando", color: "bg-slate-100 text-slate-700 border-slate-200", icon: Clock },
+  em_andamento: { label: "Em Andamento", color: "bg-blue-100 text-blue-700 border-blue-200", icon: Wrench },
+  aguardando_peca: { label: "Aguard. Peça", color: "bg-amber-100 text-amber-700 border-amber-200", icon: AlertCircle },
+  concluida: { label: "Concluída", color: "bg-emerald-100 text-emerald-700 border-emerald-200", icon: CheckCircle2 },
 };
 
 const OrdensServico = () => {
@@ -99,6 +114,15 @@ const OrdensServico = () => {
   const [servicosModalOpen, setServicosModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [mecanicoFilter, setMecanicoFilter] = useState<string | null>(null);
+  const [valorMin, setValorMin] = useState<string>("");
+  const [valorMax, setValorMax] = useState<string>("");
+
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [draftStatus, setDraftStatus] = useState<string | null>(null);
+  const [draftMecanico, setDraftMecanico] = useState<string | null>(null);
+  const [draftValorMin, setDraftValorMin] = useState<string>("");
+  const [draftValorMax, setDraftValorMax] = useState<string>("");
   
   const [servicos, setServicos] = useState<Servico[]>([
     { id: "serv-1", nome: "Troca de Óleo", valorBase: 80, tempoEstimado: "30min" },
@@ -115,6 +139,10 @@ const OrdensServico = () => {
     setOrdensServico([novaOS, ...ordensServico]);
   };
 
+  const mecanicos = Array.from(
+    new Set(ordensServico.map((os) => os.mecanico).filter((m) => m && m !== "-")),
+  ).sort();
+
   const filteredOrdens = ordensServico.filter(os => {
     const matchesSearch = os.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       os.cliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -122,18 +150,56 @@ const OrdensServico = () => {
       os.moto.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = !statusFilter || os.status === statusFilter;
+
+    const matchesMecanico = !mecanicoFilter || os.mecanico === mecanicoFilter;
+
+    const min = valorMin ? Number(valorMin.replace(",", ".")) : null;
+    const max = valorMax ? Number(valorMax.replace(",", ".")) : null;
+    const matchesValor =
+      (min === null || Number.isNaN(min) || os.valor >= min) &&
+      (max === null || Number.isNaN(max) || os.valor <= max);
     
-    return matchesSearch && matchesStatus;
+    return matchesSearch && matchesStatus && matchesMecanico && matchesValor;
   });
 
   const stats = [
-    { label: "Total Abertas", value: ordensServico.filter(os => os.status !== "concluida").length, color: "text-foreground", key: null },
-    { label: "Em Andamento", value: ordensServico.filter(os => os.status === "em_andamento").length, color: "text-blue-600", key: "em_andamento" },
-    { label: "Aguard. Peças", value: ordensServico.filter(os => os.status === "aguardando_peca").length, color: "text-amber-600", key: "aguardando_peca" },
-    { label: "Concluídas", value: ordensServico.filter(os => os.status === "concluida").length, color: "text-emerald-600", key: "concluida" },
+    { label: "Total Abertas", value: ordensServico.filter(os => os.status !== "concluida").length.toString(), color: "text-foreground" },
+    { label: "Em Andamento", value: ordensServico.filter(os => os.status === "em_andamento").length.toString(), color: "text-blue-600" },
+    { label: "Aguard. Peças", value: ordensServico.filter(os => os.status === "aguardando_peca").length.toString(), color: "text-amber-600" },
+    { label: "Concluídas", value: ordensServico.filter(os => os.status === "concluida").length.toString(), color: "text-emerald-600" },
   ];
 
-  const getStatusCount = (status: string) => ordensServico.filter(os => os.status === status).length;
+  const activeFiltersCount =
+    (statusFilter ? 1 : 0) + (mecanicoFilter ? 1 : 0) + (valorMin ? 1 : 0) + (valorMax ? 1 : 0);
+
+  const handleOpenFilters = () => {
+    setDraftStatus(statusFilter);
+    setDraftMecanico(mecanicoFilter);
+    setDraftValorMin(valorMin);
+    setDraftValorMax(valorMax);
+    setFiltersOpen(true);
+  };
+
+  const handleApplyFilters = () => {
+    setStatusFilter(draftStatus);
+    setMecanicoFilter(draftMecanico);
+    setValorMin(draftValorMin);
+    setValorMax(draftValorMax);
+    setFiltersOpen(false);
+  };
+
+  const handleClearFilters = () => {
+    setDraftStatus(null);
+    setDraftMecanico(null);
+    setDraftValorMin("");
+    setDraftValorMax("");
+
+    setStatusFilter(null);
+    setMecanicoFilter(null);
+    setValorMin("");
+    setValorMax("");
+    setFiltersOpen(false);
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -168,8 +234,8 @@ const OrdensServico = () => {
             </div>
           </div>
 
-          {/* Stats Cards - Clickable */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             {stats.map((stat, i) => (
               <motion.div
                 key={i}
@@ -177,12 +243,7 @@ const OrdensServico = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Card 
-                  className={`border-border/50 cursor-pointer transition-all hover:shadow-md ${
-                    statusFilter === stat.key ? 'ring-2 ring-primary ring-offset-2' : ''
-                  }`}
-                  onClick={() => setStatusFilter(stat.key)}
-                >
+                <Card className="border-border/50">
                   <CardContent className="p-4">
                     <p className="text-sm text-muted-foreground">{stat.label}</p>
                     <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -195,101 +256,108 @@ const OrdensServico = () => {
           {/* Search and Filters */}
           <Card className="mb-6 border-border/50">
             <CardContent className="p-4">
-              <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                {/* Search */}
-                <div className="flex-1 min-w-[200px]">
+              <div className="flex flex-col md:flex-row md:items-center gap-3">
+                <div className="flex-1 min-w-[220px]">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-                    <Input 
-                      placeholder="Buscar por OS, cliente, placa..." 
+                    <Input
+                      placeholder="Buscar por OS, cliente, placa..."
                       className="pl-10 bg-background"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    {searchTerm && (
-                      <button 
-                        onClick={() => setSearchTerm("")}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                      >
-                        <X size={14} />
-                      </button>
-                    )}
                   </div>
                 </div>
-                
-                {/* Status Filter Pills */}
-                <div className="flex items-center gap-2 flex-wrap">
-                  <button
-                    onClick={() => setStatusFilter(null)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      statusFilter === null 
-                        ? 'bg-primary text-primary-foreground shadow-sm' 
-                        : 'bg-muted text-muted-foreground hover:bg-muted/80'
-                    }`}
-                  >
-                    Todos ({ordensServico.length})
-                  </button>
-                  {Object.entries(statusConfig).map(([key, config]) => {
-                    const Icon = config.icon;
-                    const count = getStatusCount(key);
-                    const isActive = statusFilter === key;
-                    return (
-                      <button
-                        key={key}
-                        onClick={() => setStatusFilter(key)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                          isActive ? config.activeColor : `${config.color} hover:opacity-80`
-                        }`}
-                      >
-                        <Icon size={12} />
-                        {config.label}
-                        <span className={`ml-0.5 px-1.5 py-0.5 rounded-full text-[10px] ${
-                          isActive ? 'bg-white/20' : 'bg-black/10'
-                        }`}>
-                          {count}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
 
-                {/* Export Button */}
-                <Button variant="outline" size="sm" className="gap-2 shrink-0">
-                  <Download size={14} />
-                  Exportar
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" className="gap-2" onClick={handleOpenFilters}>
+                    <Filter size={16} />
+                    Filtros
+                  </Button>
+                  {activeFiltersCount > 0 && (
+                    <Badge variant="secondary" className="text-xs">
+                      {activeFiltersCount} ativo{activeFiltersCount > 1 ? "s" : ""}
+                    </Badge>
+                  )}
+                </div>
               </div>
-
-              {/* Active Filter Indicator */}
-              {(statusFilter || searchTerm) && (
-                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border/50">
-                  <span className="text-xs text-muted-foreground">Filtros ativos:</span>
-                  {searchTerm && (
-                    <Badge variant="secondary" className="gap-1 text-xs">
-                      Busca: "{searchTerm}"
-                      <button onClick={() => setSearchTerm("")} className="ml-1 hover:text-foreground">
-                        <X size={10} />
-                      </button>
-                    </Badge>
-                  )}
-                  {statusFilter && (
-                    <Badge variant="secondary" className="gap-1 text-xs">
-                      Status: {statusConfig[statusFilter as keyof typeof statusConfig]?.label}
-                      <button onClick={() => setStatusFilter(null)} className="ml-1 hover:text-foreground">
-                        <X size={10} />
-                      </button>
-                    </Badge>
-                  )}
-                  <button 
-                    onClick={() => { setSearchTerm(""); setStatusFilter(null); }}
-                    className="text-xs text-primary hover:underline ml-auto"
-                  >
-                    Limpar filtros
-                  </button>
-                </div>
-              )}
             </CardContent>
           </Card>
+
+          <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
+            <SheetContent side="right" className="w-[420px] sm:max-w-[420px]">
+              <SheetHeader>
+                <SheetTitle>Filtros</SheetTitle>
+                <SheetDescription>Refine a lista de ordens de serviço com filtros rápidos.</SheetDescription>
+              </SheetHeader>
+
+              <div className="mt-6 space-y-5">
+                <div className="space-y-2">
+                  <Label>Status</Label>
+                  <Select
+                    value={draftStatus ?? "all"}
+                    onValueChange={(v) => setDraftStatus(v === "all" ? null : v)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="aguardando">Aguardando</SelectItem>
+                      <SelectItem value="em_andamento">Em andamento</SelectItem>
+                      <SelectItem value="aguardando_peca">Aguardando peça</SelectItem>
+                      <SelectItem value="concluida">Concluída</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Mecânico</Label>
+                  <Select
+                    value={draftMecanico ?? "all"}
+                    onValueChange={(v) => setDraftMecanico(v === "all" ? null : v)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      {mecanicos.map((m) => (
+                        <SelectItem key={m} value={m}>
+                          {m}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Faixa de valor (R$)</Label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input
+                      inputMode="decimal"
+                      placeholder="Mínimo"
+                      value={draftValorMin}
+                      onChange={(e) => setDraftValorMin(e.target.value)}
+                    />
+                    <Input
+                      inputMode="decimal"
+                      placeholder="Máximo"
+                      value={draftValorMax}
+                      onChange={(e) => setDraftValorMax(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <SheetFooter className="mt-8">
+                <Button variant="outline" onClick={handleClearFilters}>
+                  Limpar
+                </Button>
+                <Button onClick={handleApplyFilters}>Aplicar</Button>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
 
           {/* Orders Table */}
           <Card className="border-border/50">
