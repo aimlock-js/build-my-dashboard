@@ -8,13 +8,11 @@ import { Input } from "@/components/ui/input";
 import { 
   Plus, 
   Search, 
-  Filter, 
   MoreHorizontal, 
   Wrench, 
   Clock, 
   CheckCircle2, 
   AlertCircle,
-  Calendar,
   User,
   Bike,
   Settings2
@@ -98,6 +96,7 @@ const OrdensServico = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [servicosModalOpen, setServicosModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
   
   const [servicos, setServicos] = useState<Servico[]>([
     { id: "serv-1", nome: "Troca de Óleo", valorBase: 80, tempoEstimado: "30min" },
@@ -114,12 +113,16 @@ const OrdensServico = () => {
     setOrdensServico([novaOS, ...ordensServico]);
   };
 
-  const filteredOrdens = ordensServico.filter(os => 
-    os.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    os.cliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    os.placa.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    os.moto.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredOrdens = ordensServico.filter(os => {
+    const matchesSearch = os.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      os.cliente.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      os.placa.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      os.moto.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = !statusFilter || os.status === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
 
   const stats = [
     { label: "Total Abertas", value: ordensServico.filter(os => os.status !== "concluida").length.toString(), color: "text-foreground" },
@@ -180,10 +183,9 @@ const OrdensServico = () => {
             ))}
           </div>
 
-          {/* Filters */}
           <Card className="mb-6 border-border/50">
             <CardContent className="p-4">
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap items-center gap-4">
                 <div className="flex-1 min-w-[200px]">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
@@ -195,14 +197,35 @@ const OrdensServico = () => {
                     />
                   </div>
                 </div>
-                <Button variant="outline" className="gap-2">
-                  <Filter size={16} />
-                  Filtros
-                </Button>
-                <Button variant="outline" className="gap-2">
-                  <Calendar size={16} />
-                  Período
-                </Button>
+                
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">Status:</span>
+                  <div className="flex gap-1.5">
+                    <Button
+                      variant={statusFilter === null ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setStatusFilter(null)}
+                      className="h-8 text-xs"
+                    >
+                      Todos
+                    </Button>
+                    {Object.entries(statusConfig).map(([key, config]) => {
+                      const Icon = config.icon;
+                      return (
+                        <Button
+                          key={key}
+                          variant={statusFilter === key ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setStatusFilter(key)}
+                          className="h-8 text-xs gap-1"
+                        >
+                          <Icon size={12} />
+                          {config.label}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
