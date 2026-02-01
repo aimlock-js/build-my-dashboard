@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +21,6 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { NovaOSModal, OrdemServico } from "@/components/modals/NovaOSModal";
-import { GerenciarServicosModal, Servico } from "@/components/modals/GerenciarServicosModal";
 import {
   Sheet,
   SheetContent,
@@ -109,9 +109,9 @@ const statusConfig = {
 };
 
 const OrdensServico = () => {
+  const navigate = useNavigate();
   const [ordensServico, setOrdensServico] = useState<OrdemServico[]>(initialOrdensServico);
   const [modalOpen, setModalOpen] = useState(false);
-  const [servicosModalOpen, setServicosModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [mecanicoFilter, setMecanicoFilter] = useState<string | null>(null);
@@ -124,7 +124,7 @@ const OrdensServico = () => {
   const [draftValorMin, setDraftValorMin] = useState<string>("");
   const [draftValorMax, setDraftValorMax] = useState<string>("");
   
-  const [servicos, setServicos] = useState<Servico[]>([
+  const servicos = [
     { id: "serv-1", nome: "Troca de Óleo", valorBase: 80, tempoEstimado: "30min" },
     { id: "serv-2", nome: "Troca de Kit Relação", valorBase: 450, tempoEstimado: "2h" },
     { id: "serv-3", nome: "Revisão Completa 10.000km", valorBase: 680, tempoEstimado: "4h" },
@@ -133,7 +133,7 @@ const OrdensServico = () => {
     { id: "serv-6", nome: "Troca de Pastilhas de Freio", valorBase: 180, tempoEstimado: "1h" },
     { id: "serv-7", nome: "Diagnóstico Injeção", valorBase: 150, tempoEstimado: "1h" },
     { id: "serv-8", nome: "Troca de Filtro de Ar", valorBase: 100, tempoEstimado: "30min" },
-  ]);
+  ];
 
   const handleSaveOS = (novaOS: OrdemServico) => {
     setOrdensServico([novaOS, ...ordensServico]);
@@ -218,7 +218,7 @@ const OrdensServico = () => {
             <div className="flex gap-2">
               <Button 
                 variant="outline"
-                onClick={() => setServicosModalOpen(true)}
+                onClick={() => navigate("/ordens-servico/servicos")}
                 className="gap-2"
               >
                 <Settings2 size={16} />
@@ -451,12 +451,6 @@ const OrdensServico = () => {
         servicos={servicos}
       />
 
-      <GerenciarServicosModal
-        open={servicosModalOpen}
-        onOpenChange={setServicosModalOpen}
-        servicos={servicos}
-        onServicosChange={setServicos}
-      />
     </div>
   );
 };
