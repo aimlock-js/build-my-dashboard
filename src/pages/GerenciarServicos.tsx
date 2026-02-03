@@ -163,21 +163,21 @@ const GerenciarServicos = () => {
             <p className="text-sm text-muted-foreground">Ambiente dedicado à gestão e organização dos serviços da operação</p>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
             {/* Left Column - Form */}
             <Card className="border-border/50 h-fit">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-base font-semibold flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center">
-                    <Plus size={16} className="text-white" />
+              <CardHeader className="pb-6">
+                <CardTitle className="text-lg font-semibold flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center">
+                    <Plus size={18} className="text-white" />
                   </div>
                   Cadastrar novo serviço
                 </CardTitle>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground mt-1">
                   Preencha os dados abaixo para adicionar um novo serviço ao catálogo
                 </p>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="nome">Nome do Serviço *</Label>
                   <Input
@@ -185,10 +185,11 @@ const GerenciarServicos = () => {
                     placeholder="Ex: Troca de Óleo"
                     value={novoServico.nome}
                     onChange={(e) => setNovoServico({ ...novoServico, nome: e.target.value })}
+                    className="h-11"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <Label htmlFor="valor">Valor Base (R$)</Label>
                     <Input
@@ -198,6 +199,7 @@ const GerenciarServicos = () => {
                       placeholder="0,00"
                       value={novoServico.valorBase}
                       onChange={(e) => setNovoServico({ ...novoServico, valorBase: e.target.value })}
+                      className="h-11"
                     />
                   </div>
                   <div className="space-y-2">
@@ -207,6 +209,7 @@ const GerenciarServicos = () => {
                       placeholder="Ex: 2h"
                       value={novoServico.tempoEstimado}
                       onChange={(e) => setNovoServico({ ...novoServico, tempoEstimado: e.target.value })}
+                      className="h-11"
                     />
                   </div>
                 </div>
@@ -218,11 +221,11 @@ const GerenciarServicos = () => {
                     placeholder="Descreva os detalhes do serviço..."
                     value={novoServico.descricao}
                     onChange={(e) => setNovoServico({ ...novoServico, descricao: e.target.value })}
-                    rows={3}
+                    rows={4}
                   />
                 </div>
 
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border/50">
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-muted/30 border border-border/50">
                   <Switch
                     id="ativo"
                     checked={novoServico.ativo}
@@ -230,7 +233,7 @@ const GerenciarServicos = () => {
                   />
                   <Label htmlFor="ativo" className="cursor-pointer flex-1">
                     <span className="font-medium">Serviço ativo</span>
-                    <span className="block text-xs text-muted-foreground font-normal">
+                    <span className="block text-xs text-muted-foreground font-normal mt-0.5">
                       Serviços inativos não aparecem na criação de OS
                     </span>
                   </Label>
@@ -238,16 +241,15 @@ const GerenciarServicos = () => {
 
                 <Button 
                   onClick={handleAddServico}
-                  className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2"
-                  size="lg"
+                  className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2 h-12 text-base"
                 >
-                  <Plus size={18} />
+                  <Plus size={20} />
                   Cadastrar Serviço
                 </Button>
 
-                <div className="flex items-start gap-2 p-3 rounded-lg bg-primary/5 border border-primary/10">
-                  <Sparkles size={14} className="text-primary mt-0.5 shrink-0" />
-                  <p className="text-xs text-muted-foreground">
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-primary/5 border border-primary/10">
+                  <Sparkles size={16} className="text-primary mt-0.5 shrink-0" />
+                  <p className="text-sm text-muted-foreground">
                     <span className="font-medium text-foreground">Dica:</span> Serviços cadastrados podem ser selecionados rapidamente durante a criação de OS, preenchendo automaticamente os valores.
                   </p>
                 </div>
@@ -256,24 +258,24 @@ const GerenciarServicos = () => {
 
             {/* Right Column - Services List */}
             <Card className="border-border/50">
-              <CardHeader className="pb-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <CardHeader className="pb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <CardTitle className="text-base font-semibold flex items-center gap-2">
-                      <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <Wrench size={16} className="text-primary" />
+                    <CardTitle className="text-lg font-semibold flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <Wrench size={18} className="text-primary" />
                       </div>
                       Serviços Cadastrados
                     </CardTitle>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-sm text-muted-foreground mt-1.5">
                       {servicos.length} {servicos.length === 1 ? 'serviço' : 'serviços'} • {servicosAtivos} {servicosAtivos === 1 ? 'ativo' : 'ativos'}
                     </p>
                   </div>
-                  <div className="relative w-full sm:w-72">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+                  <div className="relative w-full sm:w-80">
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
                     <Input
                       placeholder="Buscar serviço..."
-                      className="pl-10 h-9"
+                      className="pl-11 h-11"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -281,15 +283,15 @@ const GerenciarServicos = () => {
                 </div>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="max-h-[calc(100vh-380px)] min-h-[400px] overflow-y-auto">
+                <div className="max-h-[calc(100vh-400px)] min-h-[450px] overflow-y-auto">
                   <AnimatePresence mode="popLayout">
                     {filteredServicos.length === 0 ? (
-                      <div className="text-center py-16 text-muted-foreground">
-                        <div className="h-16 w-16 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-4">
-                          <Wrench className="h-8 w-8 opacity-40" />
+                      <div className="text-center py-20 text-muted-foreground">
+                        <div className="h-20 w-20 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-5">
+                          <Wrench className="h-10 w-10 opacity-40" />
                         </div>
-                        <p className="text-sm font-medium">Nenhum serviço encontrado</p>
-                        <p className="text-xs mt-1">Cadastre serviços para agilizar a criação de OS</p>
+                        <p className="text-base font-medium">Nenhum serviço encontrado</p>
+                        <p className="text-sm mt-1.5">Cadastre serviços para agilizar a criação de OS</p>
                       </div>
                     ) : (
                       filteredServicos.map((servico, index) => (
@@ -300,7 +302,7 @@ const GerenciarServicos = () => {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, x: -100 }}
                           transition={{ delay: index * 0.02 }}
-                          className={`group flex items-center gap-4 px-6 py-4 border-b border-border/30 hover:bg-muted/30 transition-all ${!servico.ativo ? 'opacity-50 bg-muted/10' : ''}`}
+                          className={`group flex items-center gap-5 px-6 py-5 border-b border-border/30 hover:bg-muted/30 transition-all ${!servico.ativo ? 'opacity-50 bg-muted/10' : ''}`}
                         >
                           {editingId === servico.id ? (
                             <>
@@ -337,36 +339,36 @@ const GerenciarServicos = () => {
                           ) : (
                             <>
                               <div className="flex-1 min-w-0">
-                                <p className="font-medium text-foreground truncate">{servico.nome}</p>
-                                <div className="flex items-center gap-3 mt-1.5">
-                                  <span className="text-sm text-muted-foreground flex items-center gap-1">
-                                    <DollarSign size={12} className="text-emerald-500" />
+                                <p className="font-medium text-foreground truncate text-base">{servico.nome}</p>
+                                <div className="flex items-center gap-4 mt-2">
+                                  <span className="text-sm text-muted-foreground flex items-center gap-1.5">
+                                    <DollarSign size={14} className="text-emerald-500" />
                                     R$ {servico.valorBase.toFixed(2).replace('.', ',')}
                                   </span>
-                                  <span className="text-sm text-muted-foreground flex items-center gap-1">
-                                    <Clock size={12} className="text-blue-500" />
+                                  <span className="text-sm text-muted-foreground flex items-center gap-1.5">
+                                    <Clock size={14} className="text-blue-500" />
                                     {servico.tempoEstimado}
                                   </span>
                                 </div>
                                 {servico.descricao && (
-                                  <p className="text-xs text-muted-foreground mt-1.5 line-clamp-1">{servico.descricao}</p>
+                                  <p className="text-sm text-muted-foreground mt-2 line-clamp-1">{servico.descricao}</p>
                                 )}
                               </div>
-                              <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-2 mr-2">
+                              <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-2 mr-3">
                                   <Switch
                                     checked={servico.ativo}
                                     onCheckedChange={() => handleToggleAtivo(servico.id)}
                                   />
-                                  <span className={`text-xs ${servico.ativo ? 'text-emerald-500' : 'text-muted-foreground'}`}>
+                                  <span className={`text-sm ${servico.ativo ? 'text-emerald-500' : 'text-muted-foreground'}`}>
                                     {servico.ativo ? 'Ativo' : 'Inativo'}
                                   </span>
                                 </div>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleStartEdit(servico)}>
-                                  <Edit2 size={14} />
+                                <Button variant="ghost" size="icon" className="h-9 w-9 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleStartEdit(servico)}>
+                                  <Edit2 size={16} />
                                 </Button>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleDelete(servico.id)}>
-                                  <Trash2 size={14} />
+                                <Button variant="ghost" size="icon" className="h-9 w-9 text-destructive hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleDelete(servico.id)}>
+                                  <Trash2 size={16} />
                                 </Button>
                               </div>
                             </>
