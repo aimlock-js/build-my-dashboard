@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +20,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { NovaOSModal, OrdemServico } from "@/components/modals/NovaOSModal";
+import { CadastroServicoModal } from "@/components/modals/CadastroServicoModal";
 import {
   Sheet,
   SheetContent,
@@ -109,9 +109,9 @@ const statusConfig = {
 };
 
 const OrdensServico = () => {
-  const navigate = useNavigate();
   const [ordensServico, setOrdensServico] = useState<OrdemServico[]>(initialOrdensServico);
   const [modalOpen, setModalOpen] = useState(false);
+  const [servicoModalOpen, setServicoModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [mecanicoFilter, setMecanicoFilter] = useState<string | null>(null);
@@ -218,7 +218,7 @@ const OrdensServico = () => {
             <div className="flex gap-2">
               <Button 
                 variant="outline"
-                onClick={() => navigate("/ordens-servico/servicos")}
+                onClick={() => setServicoModalOpen(true)}
                 className="gap-2"
               >
                 <Settings2 size={16} />
@@ -449,6 +449,11 @@ const OrdensServico = () => {
         onOpenChange={setModalOpen} 
         onSave={handleSaveOS}
         servicos={servicos}
+      />
+
+      <CadastroServicoModal
+        open={servicoModalOpen}
+        onOpenChange={setServicoModalOpen}
       />
 
     </div>
