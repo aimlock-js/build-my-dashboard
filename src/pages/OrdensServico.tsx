@@ -210,27 +210,48 @@ const OrdensServico = () => {
         
         <main className="flex-1 p-6 overflow-auto">
           {/* Page Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Ordens de Serviço</h1>
-              <p className="text-sm text-muted-foreground">Acompanhe o status, prazos e valores de cada atendimento</p>
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">Ordens de Serviço</h1>
+                <p className="text-sm text-muted-foreground">Acompanhe o status, prazos e valores de cada atendimento</p>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Button 
-                variant="outline"
-                onClick={() => setServicoModalOpen(true)}
-                className="gap-2"
-              >
-                <Settings2 size={16} />
-                Gerenciar Serviços
-              </Button>
-              <Button 
+            
+            {/* Quick Actions Bar */}
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mr-1">
+                Ações Rápidas
+              </span>
+              <motion.button
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.03, y: -1 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => setModalOpen(true)}
-                className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white gap-2"
+                className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border transition-all duration-200 bg-gradient-to-r from-orange-500 to-red-600 text-white border-transparent shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:opacity-95"
               >
-                <Plus size={16} />
-                Nova OS
-              </Button>
+                <Plus size={15} />
+                <span className="text-sm font-medium">Nova OS</span>
+                <span className="hidden md:inline-flex items-center justify-center w-5 h-5 rounded-md text-[10px] font-bold bg-white/20">
+                  N
+                </span>
+              </motion.button>
+              <motion.button
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.03 }}
+                whileHover={{ scale: 1.03, y: -1 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setServicoModalOpen(true)}
+                className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border transition-all duration-200 group bg-card border-border hover:border-primary/30 hover:bg-primary/5"
+              >
+                <Settings2 size={15} className="text-muted-foreground group-hover:text-primary transition-colors" />
+                <span className="text-sm font-medium text-foreground">Gerenciar Serviços</span>
+                <span className="hidden md:inline-flex items-center justify-center w-5 h-5 rounded-md text-[10px] font-bold bg-muted text-muted-foreground">
+                  G
+                </span>
+              </motion.button>
             </div>
           </div>
 
