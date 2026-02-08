@@ -351,10 +351,25 @@ const OrdensServico = () => {
           </Sheet>
 
           {/* Orders Table */}
-          <Card className="border-border/50">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-semibold">Lista de Ordens ({filteredOrdens.length})</CardTitle>
-            </CardHeader>
+          <Card className="border-border/50 overflow-hidden">
+            {/* Toolbar */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 bg-muted/20">
+              <div className="flex items-center gap-3">
+                <h3 className="text-sm font-semibold text-foreground">Lista de Ordens</h3>
+                <Badge variant="secondary" className="text-xs font-medium">
+                  {filteredOrdens.length} {filteredOrdens.length === 1 ? 'ordem' : 'ordens'}
+                </Badge>
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setModalOpen(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-red-600 text-white text-sm font-medium shadow-md shadow-orange-500/20 hover:shadow-orange-500/30 transition-shadow"
+              >
+                <Plus size={16} />
+                Nova OS
+              </motion.button>
+            </div>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -434,20 +449,6 @@ const OrdensServico = () => {
           </Card>
         </main>
       </div>
-
-      {/* FAB - Nova OS */}
-      <motion.button
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setModalOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3.5 rounded-full bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-xl shadow-orange-500/30 hover:shadow-orange-500/40 transition-all duration-200"
-      >
-        <Plus size={20} />
-        <span className="font-semibold">Nova OS</span>
-      </motion.button>
 
       <NovaOSModal 
         open={modalOpen} 
