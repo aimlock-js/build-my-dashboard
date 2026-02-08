@@ -81,7 +81,7 @@ export default {
           blue: "hsl(var(--metric-blue))",
           green: "hsl(var(--metric-green))",
           yellow: "hsl(var(--metric-yellow))",
-          purple: "hsl(var(--metric-purple))",
+          orange: "hsl(var(--metric-orange))",
         },
       },
       borderRadius: {
