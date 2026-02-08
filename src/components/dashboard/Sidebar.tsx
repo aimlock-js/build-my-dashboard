@@ -6,10 +6,16 @@ import {
   FileText,
   ChevronRight,
   Bike,
-  LogOut,
-  HelpCircle,
-  MessageCircle,
   Power,
+  HelpCircle,
+  Users,
+  Package,
+  Wallet,
+  Receipt,
+  BarChart3,
+  Settings,
+  Shield,
+  Sparkles,
 } from "lucide-react";
 
 interface MenuItem {
@@ -35,20 +41,23 @@ const menuGroups = [
     items: [
       { 
         icon: <FileText size={18} />, 
-        label: "Operações",
-        children: [
-          { label: "Ordens de Serviço", path: "/ordens-servico" },
-          { label: "Clientes", path: "/clientes" },
-          { label: "Frota de Motos", path: "/motos" },
-        ]
+        label: "Ordens de Serviço",
+        path: "/ordens-servico"
       },
       { 
-        icon: <FileText size={18} />, 
-        label: "Estoque",
-        children: [
-          { label: "Peças e Componentes", path: "/pecas-estoque" },
-          { label: "Fornecedores", path: "/fornecedores" },
-        ]
+        icon: <Users size={18} />, 
+        label: "Clientes",
+        path: "/clientes"
+      },
+      { 
+        icon: <Bike size={18} />, 
+        label: "Frota de Motos",
+        path: "/motos"
+      },
+      { 
+        icon: <Package size={18} />, 
+        label: "Peças & Estoque",
+        path: "/pecas-estoque"
       },
     ]
   },
@@ -56,18 +65,14 @@ const menuGroups = [
     label: "FINANCEIRO",
     items: [
       { 
-        icon: <FileText size={18} />, 
+        icon: <Wallet size={18} />, 
         label: "Controle Financeiro",
         path: "/financeiro"
       },
       { 
-        icon: <FileText size={18} />, 
-        label: "Faturamento",
-        children: [
-          { label: "Notas Fiscais", path: "/fiscal" },
-          { label: "Contas a Receber", path: "/contas-receber" },
-          { label: "Contas a Pagar", path: "/contas-pagar" },
-        ]
+        icon: <Receipt size={18} />, 
+        label: "Notas Fiscais",
+        path: "/fiscal"
       },
     ]
   },
@@ -75,7 +80,7 @@ const menuGroups = [
     label: "ANÁLISES",
     items: [
       { 
-        icon: <FileText size={18} />, 
+        icon: <BarChart3 size={18} />, 
         label: "Relatórios", 
         path: "/relatorios" 
       },
@@ -85,12 +90,12 @@ const menuGroups = [
     label: "SISTEMA",
     items: [
       { 
-        icon: <FileText size={18} />, 
+        icon: <Settings size={18} />, 
         label: "Configurações", 
         path: "/configuracoes" 
       },
       { 
-        icon: <FileText size={18} />, 
+        icon: <Shield size={18} />, 
         label: "Administração", 
         path: "/administrador" 
       },
@@ -100,15 +105,7 @@ const menuGroups = [
 
 export function Sidebar() {
   const location = useLocation();
-  const [expandedItems, setExpandedItems] = useState<string[]>(["Cadastros"]);
-
-  const toggleExpand = (label: string) => {
-    setExpandedItems(prev => 
-      prev.includes(label) 
-        ? prev.filter(item => item !== label)
-        : [...prev, label]
-    );
-  };
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   const isActive = (path?: string) => {
     if (!path) return false;
@@ -116,105 +113,86 @@ export function Sidebar() {
     return location.pathname.startsWith(path.split("?")[0]);
   };
 
-  const isChildActive = (item: MenuItem) => {
-    if (!item.children) return false;
-    return item.children.some(child => isActive(child.path));
-  };
-
   return (
-    <aside className="w-[220px] min-h-screen bg-sidebar flex flex-col border-r border-sidebar-border">
+    <aside className="w-[240px] min-h-screen bg-sidebar flex flex-col border-r border-sidebar-border/50">
       {/* Logo */}
-      <div className="h-16 px-5 flex items-center">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-            <Bike className="text-white" size={16} />
+      <div className="h-16 px-5 flex items-center border-b border-sidebar-border/50">
+        <Link to="/" className="flex items-center gap-3 group">
+          <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center shadow-lg glow-primary-subtle group-hover:glow-primary transition-all duration-300">
+            <Bike className="text-white" size={18} />
           </div>
-          <span className="text-sidebar-foreground font-bold text-sm">MOTOTECH</span>
-        </div>
+          <div className="flex flex-col">
+            <span className="text-sidebar-foreground font-bold text-sm tracking-tight">MOTOTECH</span>
+            <span className="text-[10px] text-sidebar-muted font-medium">Sistema de Gestão</span>
+          </div>
+        </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 overflow-y-auto">
+      <nav className="flex-1 px-3 py-4 overflow-y-auto">
         {menuGroups.map((group, groupIndex) => (
           <div key={group.label} className={groupIndex > 0 ? "mt-6" : ""}>
-            <p className="px-3 mb-2 text-[10px] font-semibold text-sidebar-muted tracking-wider">
+            <p className="px-3 mb-2 text-[10px] font-semibold text-sidebar-muted/70 tracking-widest uppercase">
               {group.label}
             </p>
-            <ul className="space-y-0.5">
+            <ul className="space-y-1">
               {group.items.map((item) => {
-                const hasChildren = item.children && item.children.length > 0;
-                const isExpanded = expandedItems.includes(item.label);
-                const itemActive = isActive(item.path) || isChildActive(item);
+                const itemActive = isActive(item.path);
+                const isHovered = hoveredItem === item.label;
 
                 return (
                   <li key={item.label}>
-                    {hasChildren ? (
-                      <>
-                        <button
-                          onClick={() => toggleExpand(item.label)}
-                          className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all ${
-                            itemActive
-                              ? "bg-sidebar-accent text-sidebar-foreground"
-                              : "text-sidebar-muted hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-                          }`}
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <span className={itemActive ? "text-primary" : ""}>{item.icon}</span>
-                            <span>{item.label}</span>
-                          </div>
+                    <Link 
+                      to={item.path || "#"}
+                      onMouseEnter={() => setHoveredItem(item.label)}
+                      onMouseLeave={() => setHoveredItem(null)}
+                    >
+                      <motion.div
+                        className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                          itemActive
+                            ? "text-primary"
+                            : "text-sidebar-muted hover:text-sidebar-foreground"
+                        }`}
+                        whileHover={{ x: 2 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        {/* Active indicator */}
+                        {itemActive && (
                           <motion.div
-                            animate={{ rotate: isExpanded ? 90 : 0 }}
-                            transition={{ duration: 0.15 }}
-                          >
-                            <ChevronRight size={14} className="text-sidebar-muted" />
-                          </motion.div>
-                        </button>
+                            layoutId="activeIndicator"
+                            className="absolute inset-0 bg-primary/10 rounded-lg"
+                            initial={false}
+                            transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                          />
+                        )}
                         
+                        {/* Hover indicator */}
                         <AnimatePresence>
-                          {isExpanded && (
-                            <motion.ul
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.15 }}
-                              className="overflow-hidden"
-                            >
-                              {item.children?.map((child) => {
-                                const childActive = isActive(child.path);
-                                return (
-                                  <li key={child.label}>
-                                    <Link to={child.path}>
-                                      <div
-                                        className={`flex items-center gap-2.5 pl-10 pr-3 py-2 text-sm transition-all ${
-                                          childActive
-                                            ? "text-primary font-medium"
-                                            : "text-sidebar-muted hover:text-sidebar-foreground"
-                                        }`}
-                                      >
-                                        <span>{child.label}</span>
-                                      </div>
-                                    </Link>
-                                  </li>
-                                );
-                              })}
-                            </motion.ul>
+                          {isHovered && !itemActive && (
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="absolute inset-0 bg-sidebar-accent/50 rounded-lg"
+                            />
                           )}
                         </AnimatePresence>
-                      </>
-                    ) : (
-                      <Link to={item.path || "#"}>
-                        <div
-                          className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all ${
-                            itemActive
-                              ? "bg-sidebar-accent text-sidebar-foreground"
-                              : "text-sidebar-muted hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-                          }`}
-                        >
-                          <span className={itemActive ? "text-primary" : ""}>{item.icon}</span>
-                          <span>{item.label}</span>
-                        </div>
-                      </Link>
-                    )}
+
+                        <span className={`relative z-10 transition-colors duration-200 ${itemActive ? "text-primary" : ""}`}>
+                          {item.icon}
+                        </span>
+                        <span className="relative z-10">{item.label}</span>
+
+                        {/* Active dot */}
+                        {itemActive && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="absolute right-3 w-1.5 h-1.5 rounded-full bg-primary"
+                          />
+                        )}
+                      </motion.div>
+                    </Link>
                   </li>
                 );
               })}
@@ -223,25 +201,35 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Bottom Actions */}
-      <div className="p-3 space-y-1">
-        <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-sidebar-muted hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-all">
-          <Power size={18} />
-          <span>Sair</span>
-        </button>
-        <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-sidebar-muted hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-all">
-          <HelpCircle size={18} />
-          <span>Ajuda</span>
-        </button>
-        <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-sidebar-muted hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-all">
-          <MessageCircle size={18} />
-          <span>Feedback</span>
-        </button>
+      {/* Upgrade Card */}
+      <div className="px-3 pb-3">
+        <div className="relative overflow-hidden rounded-xl p-4 gradient-primary-subtle border border-primary/20">
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles size={14} className="text-primary" />
+              <span className="text-xs font-semibold text-primary">PRO</span>
+            </div>
+            <p className="text-xs text-foreground/80 mb-3">Desbloqueie recursos avançados</p>
+            <button className="w-full py-2 rounded-lg text-xs font-semibold gradient-primary text-white transition-all hover:opacity-90">
+              Fazer Upgrade
+            </button>
+          </div>
+          <div className="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-primary/10 blur-2xl" />
+        </div>
       </div>
 
-      {/* Version */}
-      <div className="px-5 py-3 border-t border-sidebar-border">
-        <p className="text-[10px] text-sidebar-muted">Versão 1.0</p>
+      {/* Bottom Actions */}
+      <div className="p-3 border-t border-sidebar-border/50">
+        <div className="flex items-center gap-1">
+          <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-all">
+            <HelpCircle size={14} />
+            <span>Ajuda</span>
+          </button>
+          <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs text-sidebar-muted hover:text-destructive hover:bg-destructive/10 transition-all">
+            <Power size={14} />
+            <span>Sair</span>
+          </button>
+        </div>
       </div>
     </aside>
   );
