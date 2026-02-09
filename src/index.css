@@ -6,27 +6,27 @@
 
 @layer base {
   :root {
-    /* Premium dark theme - sophisticated and modern */
-    --background: 220 16% 6%;
+    /* Premium dark theme - deep black with purple accent */
+    --background: 240 10% 4%;
     --foreground: 0 0% 96%;
 
-    --card: 220 16% 8%;
+    --card: 240 10% 6%;
     --card-foreground: 0 0% 96%;
 
-    --popover: 220 16% 10%;
+    --popover: 240 10% 8%;
     --popover-foreground: 0 0% 96%;
 
-    /* Vibrant primary - energetic orange/coral */
-    --primary: 20 90% 55%;
+    /* Vibrant primary - electric purple #7b61ff */
+    --primary: 252 100% 69%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 12%;
+    --secondary: 240 10% 10%;
     --secondary-foreground: 0 0% 80%;
 
-    --muted: 220 14% 14%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 240 10% 12%;
+    --muted-foreground: 240 5% 50%;
 
-    --accent: 20 90% 55%;
+    --accent: 252 100% 69%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
@@ -41,25 +41,25 @@
     --info: 210 100% 56%;
     --info-foreground: 0 0% 100%;
 
-    --border: 220 14% 16%;
-    --input: 220 14% 16%;
-    --ring: 20 90% 55%;
+    --border: 240 10% 14%;
+    --input: 240 10% 14%;
+    --ring: 252 100% 69%;
 
     --radius: 0.625rem;
 
-    /* Sidebar - sleek dark */
-    --sidebar-background: 220 18% 5%;
+    /* Sidebar - deep black */
+    --sidebar-background: 240 10% 3%;
     --sidebar-foreground: 0 0% 88%;
-    --sidebar-primary: 20 90% 55%;
+    --sidebar-primary: 252 100% 69%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 10%;
+    --sidebar-accent: 240 10% 8%;
     --sidebar-accent-foreground: 0 0% 96%;
-    --sidebar-border: 220 14% 12%;
-    --sidebar-ring: 20 90% 55%;
-    --sidebar-muted: 220 10% 45%;
+    --sidebar-border: 240 10% 10%;
+    --sidebar-ring: 252 100% 69%;
+    --sidebar-muted: 240 5% 45%;
 
-    /* Chart colors - harmonious palette */
-    --chart-1: 20 90% 55%;
+    /* Chart colors - purple-centric palette */
+    --chart-1: 252 100% 69%;
     --chart-2: 210 100% 56%;
     --chart-3: 152 69% 45%;
     --chart-4: 38 92% 50%;
@@ -69,12 +69,12 @@
     --metric-blue: 210 100% 56%;
     --metric-green: 152 69% 45%;
     --metric-yellow: 38 92% 50%;
-    --metric-orange: 20 90% 55%;
+    --metric-purple: 252 100% 69%;
 
-    /* Gradient colors */
-    --gradient-start: 20 90% 55%;
-    --gradient-mid: 15 95% 50%;
-    --gradient-end: 350 85% 55%;
+    /* Gradient colors - purple spectrum */
+    --gradient-start: 252 100% 69%;
+    --gradient-mid: 270 100% 65%;
+    --gradient-end: 290 100% 60%;
   }
 }
 
