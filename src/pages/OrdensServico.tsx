@@ -262,13 +262,97 @@ const OrdensServico = () => {
                 Gerenciar Serviços
               </motion.button>
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => setModalOpen(true)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg gradient-primary text-white text-sm font-semibold shadow-lg glow-primary-subtle hover:glow-primary transition-all"
+                className="group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-xl text-white text-sm font-semibold overflow-hidden transition-all duration-300"
+                style={{
+                  background: 'linear-gradient(135deg, hsl(252 100% 69%) 0%, hsl(280 100% 60%) 50%, hsl(300 100% 55%) 100%)',
+                  boxShadow: '0 4px 20px -4px hsl(252 100% 69% / 0.5), 0 8px 32px -8px hsl(280 100% 60% / 0.3), inset 0 1px 0 0 rgba(255,255,255,0.2)'
+                }}
               >
-                <Plus size={16} />
-                Nova OS
+                {/* Animated glow background */}
+                <motion.div 
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    background: 'linear-gradient(135deg, hsl(252 100% 75%) 0%, hsl(280 100% 65%) 50%, hsl(300 100% 60%) 100%)',
+                  }}
+                />
+                
+                {/* Shine effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div 
+                    className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
+                    style={{
+                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                    }}
+                  />
+                </div>
+
+                {/* Icon with pulse effect */}
+                <motion.div
+                  className="relative z-10 w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-sm"
+                  whileHover={{ rotate: 90 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Plus size={14} strokeWidth={2.5} />
+                </motion.div>
+
+                {/* Text */}
+                <span className="relative z-10 tracking-wide">Nova OS</span>
+
+                {/* Arrow indicator */}
+                <motion.div
+                  className="relative z-10 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                >
+                  <ArrowRight size={14} />
+                </motion.div>
+
+                {/* Floating particles effect */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl">
+                  <motion.div
+                    className="absolute w-1 h-1 rounded-full bg-white/40"
+                    animate={{
+                      y: [-20, -40],
+                      x: [0, 10],
+                      opacity: [0, 1, 0],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatDelay: 0.5,
+                    }}
+                    style={{ left: '20%', bottom: '0' }}
+                  />
+                  <motion.div
+                    className="absolute w-1.5 h-1.5 rounded-full bg-white/30"
+                    animate={{
+                      y: [-20, -50],
+                      x: [0, -5],
+                      opacity: [0, 1, 0],
+                    }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                      repeatDelay: 1,
+                    }}
+                    style={{ left: '60%', bottom: '0' }}
+                  />
+                  <motion.div
+                    className="absolute w-0.5 h-0.5 rounded-full bg-white/50"
+                    animate={{
+                      y: [-15, -35],
+                      x: [0, 8],
+                      opacity: [0, 1, 0],
+                    }}
+                    transition={{
+                      duration: 1.8,
+                      repeat: Infinity,
+                      repeatDelay: 0.8,
+                    }}
+                    style={{ left: '80%', bottom: '0' }}
+                  />
+                </div>
               </motion.button>
             </div>
           </div>
