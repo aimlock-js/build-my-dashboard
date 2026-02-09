@@ -16,8 +16,8 @@
     --popover: 240 10% 8%;
     --popover-foreground: 0 0% 96%;
 
-    /* Vibrant primary - electric purple #7b61ff */
-    --primary: 252 100% 69%;
+    /* Vibrant primary - ametista purple */
+    --primary: 258 60% 52%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 240 10% 10%;
@@ -26,7 +26,7 @@
     --muted: 240 10% 12%;
     --muted-foreground: 240 5% 50%;
 
-    --accent: 252 100% 69%;
+    --accent: 258 60% 52%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
@@ -43,23 +43,23 @@
 
     --border: 240 10% 14%;
     --input: 240 10% 14%;
-    --ring: 252 100% 69%;
+    --ring: 258 60% 52%;
 
     --radius: 0.625rem;
 
     /* Sidebar - deep black */
     --sidebar-background: 240 10% 3%;
     --sidebar-foreground: 0 0% 88%;
-    --sidebar-primary: 252 100% 69%;
+    --sidebar-primary: 258 60% 52%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 10% 8%;
     --sidebar-accent-foreground: 0 0% 96%;
     --sidebar-border: 240 10% 10%;
-    --sidebar-ring: 252 100% 69%;
+    --sidebar-ring: 258 60% 52%;
     --sidebar-muted: 240 5% 45%;
 
-    /* Chart colors - purple-centric palette */
-    --chart-1: 252 100% 69%;
+    /* Chart colors - ametista palette */
+    --chart-1: 258 60% 52%;
     --chart-2: 210 100% 56%;
     --chart-3: 152 69% 45%;
     --chart-4: 38 92% 50%;
@@ -69,12 +69,12 @@
     --metric-blue: 210 100% 56%;
     --metric-green: 152 69% 45%;
     --metric-yellow: 38 92% 50%;
-    --metric-purple: 252 100% 69%;
+    --metric-purple: 258 60% 52%;
 
-    /* Gradient colors - purple spectrum */
-    --gradient-start: 252 100% 69%;
-    --gradient-mid: 270 100% 65%;
-    --gradient-end: 290 100% 60%;
+    /* Gradient colors - ametista spectrum */
+    --gradient-start: 258 60% 52%;
+    --gradient-mid: 268 55% 48%;
+    --gradient-end: 278 50% 45%;
   }
 }
 
