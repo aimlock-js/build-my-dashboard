@@ -17,10 +17,9 @@ import {
   User,
   Bike,
   Settings2,
-  TrendingUp,
-  TrendingDown,
-  ArrowRight,
-  Sparkles
+  Calendar,
+  Hash,
+  ChevronRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NovaOSModal, OrdemServico } from "@/components/modals/NovaOSModal";
@@ -106,11 +105,19 @@ const initialOrdensServico: OrdemServico[] = [
 ];
 
 const statusConfig = {
-  aguardando: { label: "Aguardando", color: "status-muted", icon: Clock },
-  em_andamento: { label: "Em Andamento", color: "status-info", icon: Wrench },
-  aguardando_peca: { label: "Aguard. Peça", color: "status-warning", icon: AlertCircle },
-  concluida: { label: "Concluída", color: "status-success", icon: CheckCircle2 },
+  aguardando: { label: "Aguardando", color: "status-muted", icon: Clock, dot: "bg-muted-foreground" },
+  em_andamento: { label: "Em Andamento", color: "status-info", icon: Wrench, dot: "bg-info" },
+  aguardando_peca: { label: "Aguard. Peça", color: "status-warning", icon: AlertCircle, dot: "bg-warning" },
+  concluida: { label: "Concluída", color: "status-success", icon: CheckCircle2, dot: "bg-success" },
 };
+
+const statusTabs = [
+  { key: null, label: "Todas" },
+  { key: "em_andamento", label: "Em Andamento", dot: "bg-info" },
+  { key: "aguardando", label: "Aguardando", dot: "bg-muted-foreground" },
+  { key: "aguardando_peca", label: "Aguard. Peça", dot: "bg-warning" },
+  { key: "concluida", label: "Concluídas", dot: "bg-success" },
+];
 
 const OrdensServico = () => {
   const [ordensServico, setOrdensServico] = useState<OrdemServico[]>(initialOrdensServico);
@@ -154,7 +161,6 @@ const OrdensServico = () => {
       os.moto.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = !statusFilter || os.status === statusFilter;
-
     const matchesMecanico = !mecanicoFilter || os.mecanico === mecanicoFilter;
 
     const min = valorMin ? Number(valorMin.replace(",", ".")) : null;
@@ -166,47 +172,16 @@ const OrdensServico = () => {
     return matchesSearch && matchesStatus && matchesMecanico && matchesValor;
   });
 
-  const stats = [
-    { 
-      label: "Total Abertas", 
-      value: ordensServico.filter(os => os.status !== "concluida").length,
-      trend: "+12%",
-      trendUp: true,
-      icon: Wrench,
-      color: "text-foreground",
-      bgColor: "bg-muted"
-    },
-    { 
-      label: "Em Andamento", 
-      value: ordensServico.filter(os => os.status === "em_andamento").length,
-      trend: "+5%",
-      trendUp: true,
-      icon: Clock,
-      color: "text-info",
-      bgColor: "bg-info/10"
-    },
-    { 
-      label: "Aguard. Peças", 
-      value: ordensServico.filter(os => os.status === "aguardando_peca").length,
-      trend: "-2%",
-      trendUp: false,
-      icon: AlertCircle,
-      color: "text-warning",
-      bgColor: "bg-warning/10"
-    },
-    { 
-      label: "Concluídas", 
-      value: ordensServico.filter(os => os.status === "concluida").length,
-      trend: "+18%",
-      trendUp: true,
-      icon: CheckCircle2,
-      color: "text-success",
-      bgColor: "bg-success/10"
-    },
-  ];
+  const counts = {
+    total: ordensServico.length,
+    em_andamento: ordensServico.filter(os => os.status === "em_andamento").length,
+    aguardando: ordensServico.filter(os => os.status === "aguardando").length,
+    aguardando_peca: ordensServico.filter(os => os.status === "aguardando_peca").length,
+    concluida: ordensServico.filter(os => os.status === "concluida").length,
+  };
 
   const activeFiltersCount =
-    (statusFilter ? 1 : 0) + (mecanicoFilter ? 1 : 0) + (valorMin ? 1 : 0) + (valorMax ? 1 : 0);
+    (mecanicoFilter ? 1 : 0) + (valorMin ? 1 : 0) + (valorMax ? 1 : 0);
 
   const handleOpenFilters = () => {
     setDraftStatus(statusFilter);
@@ -229,13 +204,16 @@ const OrdensServico = () => {
     setDraftMecanico(null);
     setDraftValorMin("");
     setDraftValorMax("");
-
     setStatusFilter(null);
     setMecanicoFilter(null);
     setValorMin("");
     setValorMax("");
     setFiltersOpen(false);
   };
+
+  const totalValor = ordensServico
+    .filter(os => os.status !== "concluida")
+    .reduce((sum, os) => sum + os.valor, 0);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -245,163 +223,165 @@ const OrdensServico = () => {
         <Header />
         
         <main className="flex-1 p-6 overflow-auto">
-          {/* Page Header */}
-          <div className="flex items-start justify-between mb-8">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground mb-1">Ordens de Serviço</h1>
-              <p className="text-sm text-muted-foreground">Gerencie todas as ordens de serviço da oficina</p>
+          {/* Page Header — clean hierarchy */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="space-y-1">
+              <h1 className="text-2xl font-bold text-foreground tracking-tight">
+                Ordens de Serviço
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                {counts.total} ordens · {counts.total - counts.concluida} em aberto · R$ {totalValor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} pendente
+              </p>
             </div>
-            <div className="flex items-center gap-3">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setServicoModalOpen(true)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border bg-card hover:bg-muted/50 text-sm font-medium text-foreground transition-colors"
+                className="h-9 px-3 text-muted-foreground hover:text-foreground"
               >
-                <Settings2 size={16} className="text-muted-foreground" />
-                Gerenciar Serviços
-              </motion.button>
-              <motion.button
-                whileHover={{ y: -1 }}
-                whileTap={{ scale: 0.98 }}
+                <Settings2 size={15} className="mr-1.5" />
+                Serviços
+              </Button>
+              <Button
+                size="sm"
                 onClick={() => setModalOpen(true)}
-                className="inline-flex items-center gap-2.5 h-11 px-5 rounded-lg font-medium text-sm text-white transition-all duration-200"
-                style={{
-                  background: 'hsl(258 60% 52%)',
-                  boxShadow: '0 1px 2px 0 rgba(0,0,0,0.3), inset 0 1px 0 0 rgba(255,255,255,0.1)'
-                }}
+                className="h-9 px-4 bg-primary hover:bg-primary/90 text-primary-foreground"
               >
-                <Plus size={16} strokeWidth={2} />
-                <span>Criar OS</span>
-              </motion.button>
+                <Plus size={15} className="mr-1.5" />
+                Criar OS
+              </Button>
             </div>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            {stats.map((stat, i) => (
+          {/* Compact Stats Row */}
+          <div className="grid grid-cols-4 gap-3 mb-6">
+            {[
+              { label: "Em aberto", value: counts.total - counts.concluida, icon: Wrench, accent: "text-foreground" },
+              { label: "Em andamento", value: counts.em_andamento, icon: Clock, accent: "text-info" },
+              { label: "Aguard. peça", value: counts.aguardando_peca, icon: AlertCircle, accent: "text-warning" },
+              { label: "Concluídas", value: counts.concluida, icon: CheckCircle2, accent: "text-success" },
+            ].map((stat, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
+                transition={{ delay: i * 0.04, duration: 0.3 }}
               >
-                <Card className="premium-card group cursor-pointer">
-                  <CardContent className="p-5">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={`w-10 h-10 rounded-xl ${stat.bgColor} flex items-center justify-center`}>
-                        <stat.icon size={18} className={stat.color} />
-                      </div>
-                      <div className={`flex items-center gap-1 text-xs font-medium ${stat.trendUp ? 'text-success' : 'text-destructive'}`}>
-                        {stat.trendUp ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                        {stat.trend}
-                      </div>
-                    </div>
-                    <p className={`text-3xl font-bold ${stat.color} mb-1`}>{stat.value}</p>
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  </CardContent>
-                </Card>
+                <div className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-card border border-border/50 hover:border-border transition-colors">
+                  <div className="w-9 h-9 rounded-lg bg-muted/80 flex items-center justify-center shrink-0">
+                    <stat.icon size={16} className={stat.accent} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className={`text-xl font-bold leading-none mb-0.5 ${stat.accent}`}>{stat.value}</p>
+                    <p className="text-[11px] text-muted-foreground font-medium truncate">{stat.label}</p>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
 
-          {/* Search and Filters */}
-          <Card className="premium-card mb-6">
-            <CardContent className="p-4">
-              <div className="flex flex-col md:flex-row md:items-center gap-3">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-                    <Input
-                      placeholder="Buscar por OS, cliente, placa ou moto..."
-                      className="pl-10 h-11 bg-background/50 border-border/50 focus:border-primary/50"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleOpenFilters}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border bg-background hover:bg-muted/50 text-sm font-medium text-foreground transition-colors"
-                  >
-                    <Filter size={16} className="text-muted-foreground" />
-                    Filtros
-                    {activeFiltersCount > 0 && (
-                      <span className="w-5 h-5 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center">
-                        {activeFiltersCount}
-                      </span>
-                    )}
-                  </motion.button>
-                </div>
+          {/* Search + Status Tabs + Filters — unified toolbar */}
+          <div className="mb-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1 max-w-sm">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={15} />
+                <Input
+                  placeholder="Buscar OS, cliente, placa..."
+                  className="pl-9 h-9 bg-card border-border/50 text-sm"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
               </div>
-            </CardContent>
-          </Card>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleOpenFilters}
+                className="h-9 px-3 text-muted-foreground hover:text-foreground shrink-0"
+              >
+                <Filter size={14} className="mr-1.5" />
+                Filtros
+                {activeFiltersCount > 0 && (
+                  <span className="ml-1.5 w-4.5 h-4.5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                    {activeFiltersCount}
+                  </span>
+                )}
+              </Button>
+            </div>
 
+            {/* Status tabs — quick filter */}
+            <div className="flex items-center gap-1">
+              {statusTabs.map((tab) => {
+                const isActive = statusFilter === tab.key;
+                const count = tab.key ? counts[tab.key as keyof typeof counts] : counts.total;
+                return (
+                  <button
+                    key={tab.key ?? "all"}
+                    onClick={() => setStatusFilter(tab.key)}
+                    className={`
+                      relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200
+                      ${isActive 
+                        ? "bg-primary/10 text-primary" 
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      }
+                    `}
+                  >
+                    {tab.dot && (
+                      <span className={`w-1.5 h-1.5 rounded-full ${tab.dot}`} />
+                    )}
+                    {tab.label}
+                    <span className={`text-[10px] ${isActive ? "text-primary/70" : "text-muted-foreground/60"}`}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Filters Sheet */}
           <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
-            <SheetContent side="right" className="w-[400px] sm:max-w-[400px] bg-card border-border">
+            <SheetContent side="right" className="w-[380px] sm:max-w-[380px] bg-card border-border">
               <SheetHeader>
-                <SheetTitle className="text-lg font-semibold">Filtros</SheetTitle>
-                <SheetDescription className="text-muted-foreground">Refine a lista de ordens de serviço</SheetDescription>
+                <SheetTitle className="text-base font-semibold">Filtros avançados</SheetTitle>
+                <SheetDescription className="text-sm text-muted-foreground">
+                  Refine a lista de ordens de serviço
+                </SheetDescription>
               </SheetHeader>
 
-              <div className="mt-6 space-y-6">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Status</Label>
-                  <Select
-                    value={draftStatus ?? "all"}
-                    onValueChange={(v) => setDraftStatus(v === "all" ? null : v)}
-                  >
-                    <SelectTrigger className="h-11 bg-background/50">
-                      <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os status</SelectItem>
-                      <SelectItem value="aguardando">Aguardando</SelectItem>
-                      <SelectItem value="em_andamento">Em andamento</SelectItem>
-                      <SelectItem value="aguardando_peca">Aguardando peça</SelectItem>
-                      <SelectItem value="concluida">Concluída</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Mecânico</Label>
+              <div className="mt-6 space-y-5">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Mecânico</Label>
                   <Select
                     value={draftMecanico ?? "all"}
                     onValueChange={(v) => setDraftMecanico(v === "all" ? null : v)}
                   >
-                    <SelectTrigger className="h-11 bg-background/50">
-                      <SelectValue placeholder="Selecione" />
+                    <SelectTrigger className="h-10 bg-background/50">
+                      <SelectValue placeholder="Todos" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos os mecânicos</SelectItem>
                       {mecanicos.map((m) => (
-                        <SelectItem key={m} value={m}>
-                          {m}
-                        </SelectItem>
+                        <SelectItem key={m} value={m}>{m}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Faixa de valor (R$)</Label>
-                  <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Faixa de valor (R$)</Label>
+                  <div className="grid grid-cols-2 gap-2">
                     <Input
                       inputMode="decimal"
-                      placeholder="Mínimo"
-                      className="h-11 bg-background/50"
+                      placeholder="Min"
+                      className="h-10 bg-background/50"
                       value={draftValorMin}
                       onChange={(e) => setDraftValorMin(e.target.value)}
                     />
                     <Input
                       inputMode="decimal"
-                      placeholder="Máximo"
-                      className="h-11 bg-background/50"
+                      placeholder="Max"
+                      className="h-10 bg-background/50"
                       value={draftValorMax}
                       onChange={(e) => setDraftValorMax(e.target.value)}
                     />
@@ -409,131 +389,126 @@ const OrdensServico = () => {
                 </div>
               </div>
 
-              <SheetFooter className="mt-8 gap-3">
-                <Button variant="outline" onClick={handleClearFilters} className="flex-1">
-                  Limpar
+              <SheetFooter className="mt-8 gap-2">
+                <Button variant="ghost" size="sm" onClick={handleClearFilters} className="flex-1">
+                  Limpar tudo
                 </Button>
-                <Button onClick={handleApplyFilters} className="flex-1 gradient-primary text-white hover:opacity-90">
-                  Aplicar Filtros
+                <Button size="sm" onClick={handleApplyFilters} className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90">
+                  Aplicar
                 </Button>
               </SheetFooter>
             </SheetContent>
           </Sheet>
 
           {/* Orders Table */}
-          <Card className="premium-card overflow-hidden">
-            {/* Table Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-border/50">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg gradient-primary-subtle flex items-center justify-center">
-                  <Sparkles size={14} className="text-primary" />
+          <Card className="bg-card border border-border/50 rounded-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border/50">
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                      <div className="flex items-center gap-1.5">
+                        <Hash size={11} />
+                        Ordem
+                      </div>
+                    </th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Cliente</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Serviço</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Mecânico</th>
+                    <th className="text-right px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Valor</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Previsão</th>
+                    <th className="w-10 px-4 py-3"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <AnimatePresence>
+                    {filteredOrdens.map((os, index) => {
+                      const statusStyle = statusConfig[os.status as keyof typeof statusConfig] || statusConfig.aguardando;
+                      return (
+                        <motion.tr 
+                          key={os.id}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ delay: index * 0.02 }}
+                          className="border-b border-border/30 group hover:bg-muted/30 transition-colors cursor-pointer"
+                        >
+                          <td className="px-4 py-3.5">
+                            <span className="font-mono text-xs font-semibold text-primary">{os.id}</span>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-8 h-8 rounded-lg bg-muted/80 flex items-center justify-center shrink-0">
+                                <Bike size={14} className="text-muted-foreground" />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-sm font-medium text-foreground truncate">{os.cliente}</p>
+                                <p className="text-[11px] text-muted-foreground truncate">{os.moto} · {os.placa}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <span className="text-sm text-foreground/80">{os.servico}</span>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-medium ${statusStyle.color}`}>
+                              <span className={`w-1.5 h-1.5 rounded-full ${statusStyle.dot}`} />
+                              {statusStyle.label}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <span className="text-sm text-muted-foreground">{os.mecanico}</span>
+                          </td>
+                          <td className="px-4 py-3.5 text-right">
+                            <span className="text-sm font-semibold text-foreground tabular-nums">
+                              R$ {os.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <div className="flex items-center gap-1.5 text-muted-foreground">
+                              <Calendar size={12} />
+                              <span className="text-xs">{os.previsao}</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <button className="w-7 h-7 rounded-md flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-muted transition-all">
+                              <ChevronRight size={14} className="text-muted-foreground" />
+                            </button>
+                          </td>
+                        </motion.tr>
+                      );
+                    })}
+                  </AnimatePresence>
+                </tbody>
+              </table>
+
+              {filteredOrdens.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center mb-3">
+                    <Search size={20} className="text-muted-foreground" />
+                  </div>
+                  <p className="text-sm font-medium text-foreground mb-1">Nenhuma ordem encontrada</p>
+                  <p className="text-xs text-muted-foreground mb-4">Ajuste os filtros ou crie uma nova OS</p>
+                  <Button size="sm" onClick={() => setModalOpen(true)} className="bg-primary text-primary-foreground hover:bg-primary/90">
+                    <Plus size={14} className="mr-1.5" />
+                    Criar OS
+                  </Button>
                 </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground">Lista de Ordens</h3>
-                  <p className="text-xs text-muted-foreground">{filteredOrdens.length} ordens encontradas</p>
-                </div>
-              </div>
+              )}
             </div>
 
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-border/50 bg-muted/30">
-                      <th className="text-left p-4 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">OS</th>
-                      <th className="text-left p-4 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Cliente / Moto</th>
-                      <th className="text-left p-4 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Serviço</th>
-                      <th className="text-left p-4 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
-                      <th className="text-left p-4 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Mecânico</th>
-                      <th className="text-left p-4 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Valor</th>
-                      <th className="text-left p-4 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Previsão</th>
-                      <th className="text-left p-4 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <AnimatePresence>
-                      {filteredOrdens.map((os, index) => {
-                        const StatusIcon = statusConfig[os.status as keyof typeof statusConfig]?.icon || Clock;
-                        const statusStyle = statusConfig[os.status as keyof typeof statusConfig] || statusConfig.aguardando;
-                        return (
-                          <motion.tr 
-                            key={os.id}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ delay: index * 0.03 }}
-                            className="border-b border-border/30 table-row-hover group"
-                          >
-                            <td className="p-4">
-                              <span className="font-mono text-sm font-semibold text-primary">{os.id}</span>
-                            </td>
-                            <td className="p-4">
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                                  <Bike size={18} className="text-primary" />
-                                </div>
-                                <div>
-                                  <p className="font-medium text-sm text-foreground">{os.cliente}</p>
-                                  <p className="text-xs text-muted-foreground">{os.moto} • {os.placa}</p>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="p-4">
-                              <span className="text-sm text-foreground">{os.servico}</span>
-                            </td>
-                            <td className="p-4">
-                              <Badge variant="outline" className={`gap-1.5 px-2.5 py-1 text-xs font-medium ${statusStyle.color}`}>
-                                <StatusIcon size={12} />
-                                {statusStyle.label}
-                              </Badge>
-                            </td>
-                            <td className="p-4">
-                              <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center">
-                                  <User size={12} className="text-muted-foreground" />
-                                </div>
-                                <span className="text-sm text-foreground">{os.mecanico}</span>
-                              </div>
-                            </td>
-                            <td className="p-4">
-                              <span className="font-semibold text-sm text-foreground">
-                                R$ {os.valor.toFixed(2).replace('.', ',')}
-                              </span>
-                            </td>
-                            <td className="p-4">
-                              <span className="text-sm text-muted-foreground">{os.previsao}</span>
-                            </td>
-                            <td className="p-4">
-                              <motion.button
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-muted transition-colors"
-                              >
-                                <MoreHorizontal size={16} className="text-muted-foreground" />
-                              </motion.button>
-                            </td>
-                          </motion.tr>
-                        );
-                      })}
-                    </AnimatePresence>
-                  </tbody>
-                </table>
-
-                {filteredOrdens.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
-                      <Search size={24} className="text-muted-foreground" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-foreground mb-1">Nenhuma ordem encontrada</h3>
-                    <p className="text-sm text-muted-foreground mb-4">Tente ajustar os filtros ou criar uma nova OS</p>
-                    <Button onClick={() => setModalOpen(true)} className="gradient-primary text-white">
-                      <Plus size={16} className="mr-2" />
-                      Criar Nova OS
-                    </Button>
-                  </div>
-                )}
+            {/* Table Footer */}
+            {filteredOrdens.length > 0 && (
+              <div className="flex items-center justify-between px-4 py-3 border-t border-border/50">
+                <p className="text-xs text-muted-foreground">
+                  {filteredOrdens.length} de {ordensServico.length} ordens
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Total: <span className="font-semibold text-foreground">R$ {filteredOrdens.reduce((s, os) => s + os.valor, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                </p>
               </div>
-            </CardContent>
+            )}
           </Card>
         </main>
       </div>
