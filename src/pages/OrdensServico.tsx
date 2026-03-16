@@ -1,25 +1,21 @@
 import { useState } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { 
   Plus, 
   Search, 
   Filter,
-  MoreHorizontal, 
   Wrench, 
   Clock, 
   CheckCircle2, 
   AlertCircle,
-  User,
   Bike,
   Settings2,
   Calendar,
-  Hash,
-  ChevronRight
+  ChevronRight,
+  TrendingUp
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NovaOSModal, OrdemServico } from "@/components/modals/NovaOSModal";
@@ -105,10 +101,10 @@ const initialOrdensServico: OrdemServico[] = [
 ];
 
 const statusConfig = {
-  aguardando: { label: "Aguardando", color: "status-muted", icon: Clock, dot: "bg-muted-foreground" },
-  em_andamento: { label: "Em Andamento", color: "status-info", icon: Wrench, dot: "bg-info" },
-  aguardando_peca: { label: "Aguard. Peça", color: "status-warning", icon: AlertCircle, dot: "bg-warning" },
-  concluida: { label: "Concluída", color: "status-success", icon: CheckCircle2, dot: "bg-success" },
+  aguardando: { label: "Aguardando", color: "bg-muted-foreground/10 text-muted-foreground", icon: Clock, dot: "bg-muted-foreground" },
+  em_andamento: { label: "Em Andamento", color: "bg-info/10 text-info", icon: Wrench, dot: "bg-info" },
+  aguardando_peca: { label: "Aguard. Peça", color: "bg-warning/10 text-warning", icon: AlertCircle, dot: "bg-warning" },
+  concluida: { label: "Concluída", color: "bg-success/10 text-success", icon: CheckCircle2, dot: "bg-success" },
 };
 
 const statusTabs = [
@@ -130,7 +126,6 @@ const OrdensServico = () => {
   const [valorMax, setValorMax] = useState<string>("");
 
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [draftStatus, setDraftStatus] = useState<string | null>(null);
   const [draftMecanico, setDraftMecanico] = useState<string | null>(null);
   const [draftValorMin, setDraftValorMin] = useState<string>("");
   const [draftValorMax, setDraftValorMax] = useState<string>("");
@@ -184,7 +179,6 @@ const OrdensServico = () => {
     (mecanicoFilter ? 1 : 0) + (valorMin ? 1 : 0) + (valorMax ? 1 : 0);
 
   const handleOpenFilters = () => {
-    setDraftStatus(statusFilter);
     setDraftMecanico(mecanicoFilter);
     setDraftValorMin(valorMin);
     setDraftValorMax(valorMax);
@@ -192,7 +186,6 @@ const OrdensServico = () => {
   };
 
   const handleApplyFilters = () => {
-    setStatusFilter(draftStatus);
     setMecanicoFilter(draftMecanico);
     setValorMin(draftValorMin);
     setValorMax(draftValorMax);
@@ -200,7 +193,6 @@ const OrdensServico = () => {
   };
 
   const handleClearFilters = () => {
-    setDraftStatus(null);
     setDraftMecanico(null);
     setDraftValorMin("");
     setDraftValorMax("");
@@ -215,6 +207,41 @@ const OrdensServico = () => {
     .filter(os => os.status !== "concluida")
     .reduce((sum, os) => sum + os.valor, 0);
 
+  const stats = [
+    { 
+      label: "Em aberto", 
+      value: counts.total - counts.concluida, 
+      icon: Wrench, 
+      accent: "text-primary",
+      bgAccent: "bg-primary/8",
+      borderAccent: "border-primary/15",
+    },
+    { 
+      label: "Em andamento", 
+      value: counts.em_andamento, 
+      icon: Clock, 
+      accent: "text-info",
+      bgAccent: "bg-info/8",
+      borderAccent: "border-info/15",
+    },
+    { 
+      label: "Aguard. peça", 
+      value: counts.aguardando_peca, 
+      icon: AlertCircle, 
+      accent: "text-warning",
+      bgAccent: "bg-warning/8",
+      borderAccent: "border-warning/15",
+    },
+    { 
+      label: "Concluídas", 
+      value: counts.concluida, 
+      icon: CheckCircle2, 
+      accent: "text-success",
+      bgAccent: "bg-success/8",
+      borderAccent: "border-success/15",
+    },
+  ];
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -223,72 +250,88 @@ const OrdensServico = () => {
         <Header />
         
         <main className="flex-1 p-6 overflow-auto">
-          {/* Page Header — clean hierarchy */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="space-y-1">
-              <h1 className="text-2xl font-bold text-foreground tracking-tight">
+          {/* Page Header */}
+          <motion.div 
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex items-start justify-between mb-8"
+          >
+            <div>
+              <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">
                 Ordens de Serviço
               </h1>
-              <p className="text-sm text-muted-foreground">
-                {counts.total} ordens · {counts.total - counts.concluida} em aberto · R$ {totalValor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} pendente
-              </p>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span>{counts.total} ordens</span>
+                <span className="w-1 h-1 rounded-full bg-border" />
+                <span className="text-primary font-medium">{counts.total - counts.concluida} em aberto</span>
+                <span className="w-1 h-1 rounded-full bg-border" />
+                <span className="flex items-center gap-1">
+                  <TrendingUp size={12} className="text-success" />
+                  R$ {totalValor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </span>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setServicoModalOpen(true)}
-                className="h-9 px-3 text-muted-foreground hover:text-foreground"
+                className="h-9 px-3 border-border/60 text-muted-foreground hover:text-foreground hover:border-border hover:bg-muted/50 transition-all"
               >
-                <Settings2 size={15} className="mr-1.5" />
+                <Settings2 size={14} className="mr-1.5" />
                 Serviços
               </Button>
-              <Button
-                size="sm"
+              <motion.button
+                whileHover={{ y: -1 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setModalOpen(true)}
-                className="h-9 px-4 bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="inline-flex items-center gap-2 h-9 px-4 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
               >
-                <Plus size={15} className="mr-1.5" />
+                <Plus size={15} strokeWidth={2.5} />
                 Criar OS
-              </Button>
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Compact Stats Row */}
+          {/* Stat Cards */}
           <div className="grid grid-cols-4 gap-3 mb-6">
-            {[
-              { label: "Em aberto", value: counts.total - counts.concluida, icon: Wrench, accent: "text-foreground" },
-              { label: "Em andamento", value: counts.em_andamento, icon: Clock, accent: "text-info" },
-              { label: "Aguard. peça", value: counts.aguardando_peca, icon: AlertCircle, accent: "text-warning" },
-              { label: "Concluídas", value: counts.concluida, icon: CheckCircle2, accent: "text-success" },
-            ].map((stat, i) => (
+            {stats.map((stat, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.04, duration: 0.3 }}
+                transition={{ delay: i * 0.05, duration: 0.35 }}
+                className={`group relative rounded-xl border bg-card p-4 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 ${stat.borderAccent} hover:border-border`}
               >
-                <div className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-card border border-border/50 hover:border-border transition-colors">
-                  <div className="w-9 h-9 rounded-lg bg-muted/80 flex items-center justify-center shrink-0">
-                    <stat.icon size={16} className={stat.accent} />
+                <div className="flex items-center justify-between mb-3">
+                  <div className={`w-8 h-8 rounded-lg ${stat.bgAccent} flex items-center justify-center`}>
+                    <stat.icon size={15} className={stat.accent} strokeWidth={2} />
                   </div>
-                  <div className="min-w-0">
-                    <p className={`text-xl font-bold leading-none mb-0.5 ${stat.accent}`}>{stat.value}</p>
-                    <p className="text-[11px] text-muted-foreground font-medium truncate">{stat.label}</p>
-                  </div>
+                  {stat.value > 0 && (
+                    <span className={`text-[10px] font-semibold uppercase tracking-wider ${stat.accent} opacity-60`}>
+                      ativo
+                    </span>
+                  )}
                 </div>
+                <p className={`text-2xl font-bold tracking-tight leading-none mb-1 ${stat.accent}`}>
+                  {stat.value}
+                </p>
+                <p className="text-xs text-muted-foreground font-medium">
+                  {stat.label}
+                </p>
               </motion.div>
             ))}
           </div>
 
-          {/* Search + Status Tabs + Filters — unified toolbar */}
-          <div className="mb-4 space-y-3">
+          {/* Toolbar */}
+          <div className="mb-5 space-y-3">
             <div className="flex items-center gap-2">
-              <div className="relative flex-1 max-w-sm">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={15} />
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/60" size={15} />
                 <Input
-                  placeholder="Buscar OS, cliente, placa..."
-                  className="pl-9 h-9 bg-card border-border/50 text-sm"
+                  placeholder="Buscar por OS, cliente, placa ou moto..."
+                  className="pl-9 h-9 bg-card border-border/40 text-sm placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -297,20 +340,20 @@ const OrdensServico = () => {
                 variant="outline"
                 size="sm"
                 onClick={handleOpenFilters}
-                className="h-9 px-3 text-muted-foreground hover:text-foreground shrink-0"
+                className="h-9 px-3 border-border/40 text-muted-foreground hover:text-foreground hover:border-border hover:bg-muted/40 transition-all"
               >
-                <Filter size={14} className="mr-1.5" />
+                <Filter size={13} className="mr-1.5" />
                 Filtros
                 {activeFiltersCount > 0 && (
-                  <span className="ml-1.5 w-4.5 h-4.5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                  <span className="ml-1.5 min-w-[18px] h-[18px] rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
                     {activeFiltersCount}
                   </span>
                 )}
               </Button>
             </div>
 
-            {/* Status tabs — quick filter */}
-            <div className="flex items-center gap-1">
+            {/* Status Tabs */}
+            <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-muted/30 w-fit">
               {statusTabs.map((tab) => {
                 const isActive = statusFilter === tab.key;
                 const count = tab.key ? counts[tab.key as keyof typeof counts] : counts.total;
@@ -319,18 +362,18 @@ const OrdensServico = () => {
                     key={tab.key ?? "all"}
                     onClick={() => setStatusFilter(tab.key)}
                     className={`
-                      relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200
+                      relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200
                       ${isActive 
-                        ? "bg-primary/10 text-primary" 
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                        ? "bg-card text-foreground shadow-sm shadow-black/10" 
+                        : "text-muted-foreground hover:text-foreground"
                       }
                     `}
                   >
                     {tab.dot && (
-                      <span className={`w-1.5 h-1.5 rounded-full ${tab.dot}`} />
+                      <span className={`w-1.5 h-1.5 rounded-full ${tab.dot} ${isActive ? '' : 'opacity-50'}`} />
                     )}
                     {tab.label}
-                    <span className={`text-[10px] ${isActive ? "text-primary/70" : "text-muted-foreground/60"}`}>
+                    <span className={`text-[10px] tabular-nums ${isActive ? "text-muted-foreground" : "text-muted-foreground/50"}`}>
                       {count}
                     </span>
                   </button>
@@ -400,65 +443,74 @@ const OrdensServico = () => {
             </SheetContent>
           </Sheet>
 
-          {/* Orders Table */}
-          <Card className="bg-card border border-border/50 rounded-xl overflow-hidden">
+          {/* Table */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+            className="rounded-xl border border-border/40 bg-card overflow-hidden"
+          >
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-border/50">
-                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                      <div className="flex items-center gap-1.5">
-                        <Hash size={11} />
-                        Ordem
-                      </div>
-                    </th>
-                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Cliente</th>
-                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Serviço</th>
-                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
-                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Mecânico</th>
-                    <th className="text-right px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Valor</th>
-                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Previsão</th>
-                    <th className="w-10 px-4 py-3"></th>
+                  <tr className="border-b border-border/40 bg-muted/20">
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-wider">Ordem</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-wider">Cliente / Veículo</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-wider">Serviço</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-wider">Status</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-wider">Mecânico</th>
+                    <th className="text-right px-4 py-3 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-wider">Valor</th>
+                    <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-wider">Previsão</th>
+                    <th className="w-10 px-2 py-3"></th>
                   </tr>
                 </thead>
-                <tbody>
-                  <AnimatePresence>
+                <tbody className="divide-y divide-border/20">
+                  <AnimatePresence mode="popLayout">
                     {filteredOrdens.map((os, index) => {
                       const statusStyle = statusConfig[os.status as keyof typeof statusConfig] || statusConfig.aguardando;
                       return (
                         <motion.tr 
                           key={os.id}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ delay: index * 0.02 }}
-                          className="border-b border-border/30 group hover:bg-muted/30 transition-colors cursor-pointer"
+                          initial={{ opacity: 0, x: -4 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 4 }}
+                          transition={{ delay: index * 0.03, duration: 0.25 }}
+                          className="group hover:bg-muted/20 transition-colors duration-150 cursor-pointer"
                         >
                           <td className="px-4 py-3.5">
-                            <span className="font-mono text-xs font-semibold text-primary">{os.id}</span>
+                            <span className="font-mono text-xs font-semibold text-primary/80 tracking-wide">{os.id}</span>
                           </td>
                           <td className="px-4 py-3.5">
-                            <div className="flex items-center gap-2.5">
-                              <div className="w-8 h-8 rounded-lg bg-muted/80 flex items-center justify-center shrink-0">
-                                <Bike size={14} className="text-muted-foreground" />
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-muted/60 flex items-center justify-center shrink-0 ring-1 ring-border/30">
+                                <span className="text-[11px] font-bold text-muted-foreground">
+                                  {os.cliente.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                                </span>
                               </div>
                               <div className="min-w-0">
-                                <p className="text-sm font-medium text-foreground truncate">{os.cliente}</p>
-                                <p className="text-[11px] text-muted-foreground truncate">{os.moto} · {os.placa}</p>
+                                <p className="text-sm font-medium text-foreground truncate leading-tight">{os.cliente}</p>
+                                <p className="text-[11px] text-muted-foreground/60 truncate flex items-center gap-1 mt-0.5">
+                                  <Bike size={10} />
+                                  {os.moto} · <span className="font-mono">{os.placa}</span>
+                                </p>
                               </div>
                             </div>
                           </td>
                           <td className="px-4 py-3.5">
-                            <span className="text-sm text-foreground/80">{os.servico}</span>
+                            <span className="text-sm text-foreground/70">{os.servico}</span>
                           </td>
                           <td className="px-4 py-3.5">
-                            <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-medium ${statusStyle.color}`}>
+                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium ${statusStyle.color}`}>
                               <span className={`w-1.5 h-1.5 rounded-full ${statusStyle.dot}`} />
                               {statusStyle.label}
                             </span>
                           </td>
                           <td className="px-4 py-3.5">
-                            <span className="text-sm text-muted-foreground">{os.mecanico}</span>
+                            <span className="text-sm text-muted-foreground">
+                              {os.mecanico === "-" ? (
+                                <span className="text-muted-foreground/40 italic text-xs">Não atribuído</span>
+                              ) : os.mecanico}
+                            </span>
                           </td>
                           <td className="px-4 py-3.5 text-right">
                             <span className="text-sm font-semibold text-foreground tabular-nums">
@@ -466,15 +518,15 @@ const OrdensServico = () => {
                             </span>
                           </td>
                           <td className="px-4 py-3.5">
-                            <div className="flex items-center gap-1.5 text-muted-foreground">
-                              <Calendar size={12} />
-                              <span className="text-xs">{os.previsao}</span>
+                            <div className="flex items-center gap-1.5 text-muted-foreground/60">
+                              <Calendar size={11} />
+                              <span className="text-[11px] tabular-nums">{os.previsao}</span>
                             </div>
                           </td>
-                          <td className="px-4 py-3.5">
-                            <button className="w-7 h-7 rounded-md flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-muted transition-all">
+                          <td className="px-2 py-3.5">
+                            <div className="w-7 h-7 rounded-md flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-muted/50 transition-all">
                               <ChevronRight size={14} className="text-muted-foreground" />
-                            </button>
+                            </div>
                           </td>
                         </motion.tr>
                       );
@@ -484,13 +536,19 @@ const OrdensServico = () => {
               </table>
 
               {filteredOrdens.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center mb-3">
-                    <Search size={20} className="text-muted-foreground" />
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <div className="w-12 h-12 rounded-full bg-muted/40 flex items-center justify-center mb-4">
+                    <Search size={18} className="text-muted-foreground/50" />
                   </div>
-                  <p className="text-sm font-medium text-foreground mb-1">Nenhuma ordem encontrada</p>
-                  <p className="text-xs text-muted-foreground mb-4">Ajuste os filtros ou crie uma nova OS</p>
-                  <Button size="sm" onClick={() => setModalOpen(true)} className="bg-primary text-primary-foreground hover:bg-primary/90">
+                  <p className="text-sm font-medium text-foreground/80 mb-1">Nenhuma ordem encontrada</p>
+                  <p className="text-xs text-muted-foreground/60 mb-5 max-w-[240px]">
+                    Tente ajustar os filtros ou crie uma nova ordem de serviço
+                  </p>
+                  <Button 
+                    size="sm" 
+                    onClick={() => setModalOpen(true)} 
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
+                  >
                     <Plus size={14} className="mr-1.5" />
                     Criar OS
                   </Button>
@@ -500,16 +558,18 @@ const OrdensServico = () => {
 
             {/* Table Footer */}
             {filteredOrdens.length > 0 && (
-              <div className="flex items-center justify-between px-4 py-3 border-t border-border/50">
-                <p className="text-xs text-muted-foreground">
-                  {filteredOrdens.length} de {ordensServico.length} ordens
+              <div className="flex items-center justify-between px-4 py-3 border-t border-border/30 bg-muted/10">
+                <p className="text-[11px] text-muted-foreground/60">
+                  Exibindo <span className="text-foreground/70 font-medium">{filteredOrdens.length}</span> de {ordensServico.length} ordens
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  Total: <span className="font-semibold text-foreground">R$ {filteredOrdens.reduce((s, os) => s + os.valor, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                <p className="text-[11px] text-muted-foreground/60">
+                  Total: <span className="font-semibold text-foreground tabular-nums">
+                    R$ {filteredOrdens.reduce((s, os) => s + os.valor, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  </span>
                 </p>
               </div>
             )}
-          </Card>
+          </motion.div>
         </main>
       </div>
 
